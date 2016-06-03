@@ -1,0 +1,12 @@
+libs/cglib
+libs/common/rd-ant-ext-2.0.2.jar
+libs/dbUnit
+libs/xdoclet
+middlegen.properties
+src/java/beans.xml
+src/java/log4j.properties
+src/java/messageResource.properties
+src/java/schemaResources.properties
+src/test/cxfrouting.properties
+work
+.*.swp
