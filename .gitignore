@@ -7,6 +7,16 @@ src/java/beans.xml
 src/java/log4j.properties
 src/java/messageResource.properties
 src/java/schemaResources.properties
+src/java/hibernate.cfg.xml
+src/java/*.generation
 src/test/cxfrouting.properties
+etc/schema/build.properties
+etc/sql/*/*.generation
+etc/sql/*/*.map
+etc/sql/*.generation
+etc/sql/*.map
 work
 .*.swp
+velocity.log
+test
+target
