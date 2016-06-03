@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans default-lazy-init="true">
+  <import resource="beans-domain.xml" />
+
+  <bean id="connectionManager" class="jp.rough_diamond.framework.transaction.hibernate.HibernateConnectionManager">
+    <description>Hibernate用のトランザクションマネージャ</description>
+    <property name="interceptor"><bean class="jp.rough_diamond.commons.service.hibernate.BasicServiceInterceptor" /></property>
+    <property name="listenersMap">
+      <map>
+        <entry key="load">
+          <list>
+            <value>jp.rough_diamond.commons.service.hibernate.LoadEventListenerExt</value>
+          </list>
+        </entry>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="serviceBus" class="jp.rough_diamond.framework.es.ServiceBus">
+    <description>ServiceBus(MuleServer Wrapper)</description>
+    <property name="config">
+      <value>mule/mule-common-config.xml mule/mule-server-config.xml mule/mule-client-config.xml</value>
+    </property>
+  </bean>
+
+  <bean id="serviceFinder" class="jp.rough_diamond.framework.service.ServiceFinderChain">
+    <description>ServiceFinder</description>
+    <constructor-arg index="0">
+      <list>
+        <bean class="jp.rough_diamond.framework.es.ServiceFinder" />
+        <bean class="jp.rough_diamond.framework.transaction.ServiceFinder" />
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="transactionInterceptor" class="jp.rough_diamond.framework.transaction.hibernate.HibernateAnotationTransactionManager">
+    <description>アノテーションによってトランザクションを制御するInterceptor</description>
+  </bean>
+
+  <bean id="databaseCharset" class="java.lang.String">
+    <description>データベースの文字コード（文字列長チェックで使用）</description>
+    <constructor-arg index="0" type="java.lang.String"><value>UTF-8</value></constructor-arg>
+  </bean>
+
+  <!-- 
+    Webの場合はLocaleControllerByThreadLocalにすること
+    SimpleLocaleControllerは、動作ＯＳ上の言語情報からローケルを特定するのでまずい
+  -->
+  <bean id="localeController" class="jp.rough_diamond.commons.resource.SimpleLocaleController">
+    <description>どのレイヤからも透過的にローケルに対してアクセス可能なインタフェース</description>
+  </bean>
+
+  <bean id="resourceName" class="java.lang.String">
+    <description>リソースファイル名</description>
+    <constructor-arg index="0" type="java.lang.String"><value>messageResource, schemaResources</value></constructor-arg>
+  </bean>
+  
+  <bean id="userController" class="jp.rough_diamond.framework.user.UserControllerByThreadLocal">
+    <description>どのレイヤからも透過的にユーザーに対してアクセス可能なインタフェース</description>
+  </bean>
+
+  <bean id="velocityWrapper" class="jp.rough_diamond.commons.velocity.VelocityWrapper">
+    <description>VelocityWrapper</description>
+    <constructor-arg index="0"><ref bean="velocityProperties" /></constructor-arg>
+    <constructor-arg index="1">
+      <map>
+        <entry key="util" ><bean class="jp.rough_diamond.commons.velocity.VelocityUtils" /></entry>
+        <entry key="sharp" ><value>#</value></entry>
+        <entry key="nFormat" ><value>#,##0</value></entry>
+        <entry key="maxLong" ><value>9223372036854775807</value></entry>
+      </map>
+    </constructor-arg>
+  </bean>
+  
+  <bean id="velocityProperties" class="java.lang.String">
+    <description>velocity.properties</description>
+    <constructor-arg index="0" type="java.lang.String"><value>
+runtime.log.logsystem.class=org.apache.velocity.runtime.log.NullLogSystem
+input.encoding=@velocity.input.encoding@
+output.encoding=@velocity.output.encoding@
+directive.foreach.counter.name = velocityCount
+directive.foreach.counter.initial.value = 0
+directive.parse.max.depth = 10
+resource.loader = @velocity.resource.loader@
+class.resource.loader.description = Velocity Classpath Resource Loader
+class.resource.loader.class = org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+file.resource.loader.description = Velocity File Resource Loader
+file.resource.loader.class = org.apache.velocity.runtime.resource.loader.FileResourceLoader
+file.resource.loader.path = @velocity.resource.root@
+file.resource.loader.cache = true
+file.resource.loader.modificationCheckInterval = @file.check.interval@
+velocimacro.library = VM_global_library.vm,common.vm
+    </value></constructor-arg>
+  </bean>
+
+<!--
+  <bean id="roleJudge" class="jp.rough_diamond.framework.user.SimpleRoleJudge">
+    <description>アクセス制御</description>
+  </bean>
+
+  <bean id="containsCountry" class="java.util.HashSet">
+    <description>ローケルマネージャで許容する国コード群</description>
+    <constructor-arg index="0">
+      <set>
+        <value>JP</value>
+      </set>
+    </constructor-arg>
+  </bean>
+  
+  <bean id="defaultLocale" class="java.util.Locale">
+    <description>許容できない国コードだった場合に使用するローケル文字列</description>
+    <constructor-arg index="0" type="java.lang.String"><value>ja</value></constructor-arg>
+    <constructor-arg index="1" type="java.lang.String"><value>JP</value></constructor-arg>
+  </bean>
+  
+  <bean id="rerationalChecker" class="jp.rough_diamond.commons.service.RelationalChecker">
+    <description>関連の自動チェック</description>
+    <property name="parents">
+      <list>
+
+      </list>
+    </property>
+  </bean>
+
+  <bean id="tomcatRequestURLPrefix" class="java.lang.String">
+    <description>TOMCATのURLプレフィックス（テスト用。テスト以外の使用は禁止です）</description>
+    <constructor-arg index="0" type="java.lang.String"><value>@tomcatRequestURLPrefix@</value></constructor-arg>
+  </bean>
+-->
+</beans>

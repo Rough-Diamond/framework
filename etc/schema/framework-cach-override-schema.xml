@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="Shift_JIS" standalone="no"?>
+
+<!--
+DTDは、
+
+ DOCTYPE database SYSTEM "http://db.apache.org/torque/dtd/database_3_3.dtd"
+です。
+ /database/table/columnタグにencrypt属性（デフォルトfalse）を追加しています。
+-->
+<database defaultIdMethod="none" name="framework tables" package="jp.rough_diamond.commons.entity" defaultJavaType="object">
+  <external-schema filename="../../../framework/etc/schema/framework-schema.xml" />
+  <option key="cache.UNIT" value="read-write" />
+</database>

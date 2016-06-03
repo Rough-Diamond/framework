@@ -1,0 +1,7 @@
+local.host=@local.host@
+local.port=@local.port@
+
+server.host=@server.host@
+server.port=@server.port@
+
+wsdl.dir=@wsdl.dir@

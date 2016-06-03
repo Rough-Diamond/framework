@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="$param.sourceEncoding"?>
+
+<project name="$param.projectName" basedir="." default="makeConfig">
+  <property name="src.encoding"                   value="$param.sourceEncoding" />
+#if($param.appType.toString() == "SIMPLE")
+  <property name="lib.dir"                        value="./lib" />
+  <property name="classes.dir"                    value="./bin" />
+#else
+  <property name="lib.dir"                        value="./webapp/WEB-INF/lib" />
+#end
+#if($param.isContainOption("USING_MAKE_BEAN"))
+  <property name="bean.def.xml"                   value="./etc/beanDef/beanDef.xml" />
+#end
+#if($param.isContainOption("USING_ESB"))
+  <property name="cxf.stub.package"               value="cxf.stub" />
+  <property name="cxf.mule.server.config"         value="./src/java/mule/mule-server-config.xml" />
+  <property name="cxf.mule.client.config"         value="./src/java/mule/mule-client-config.xml" />
+  <property name="server.endpoint.prefix"         value="server" />
+#end
+
+#set($frameworkPath = $param.frameworkPathRelative)
+  <import file="${frameworkPath}/build-common.xml" />
+#if($param.isContainOption("USING_DATABASE"))
+  <property name="hibernate.fileset.dirs"         value="${src.dir};${frameworkPath}/src/java" />
+
+  <!-- RDF CoreのSQL定義分を取得してからDB-initを実行する -->
+  <target name="DB-init" depends="init-task" description="自動生成されたCreate Table文を実行する">
+    <property file="./middlegen.properties" />
+    <copy todir="${torque.sql.dir}" overwrite="true" outputencoding="${src.encoding}">
+      <fileset dir="${framework.root}/etc/sql/${torque.database.type}">
+        <include name="*.sql" />
+      </fileset>
+    </copy>
+    <antcall target="DB-clear-1" />
+    <antcall target="DB-clear-2" />
+  </target>
+#else
+  <!-- makeConfigBase実行時にmiddlegen.propertiesをコピーしない -->
+  <property name="do.not.use.makeSchemaAccessor"  value="true" />
+#end
+
+  <target name="makeConfig" depends="init-task, filter-check, filter-exists, makeConfigBase" if="filtering.filename.present" description="EIを実行する">
+    <copy file="${conf.dir}/template/beans.xml" tofile="${src.dir}/beans.xml" filtering="true" overwrite="true" encoding="$param.sourceEncoding" />
+    <copy file="${conf.dir}/template/beans-domain.xml" tofile="${src.dir}/beans-domain.xml" filtering="true" overwrite="true" encoding="$param.sourceEncoding" />
+    <copy file="${conf.dir}/template/log4j.properties" tofile="${src.dir}/log4j.properties" filtering="true" overwrite="true" encoding="$param.sourceEncoding" />
+#if($param.isContainOption("USING_ESB"))
+    <copy file="${conf.dir}/template/cxfrouting.properties" tofile="${src.dir}/cxfrouting.properties" filtering="true" overwrite="true" encoding="$param.sourceEncoding" />
+#end
+    <native2ascii src="${resource.dir}" dest="${src.dir}" includes="**/*.properties" encoding="$param.sourceEncoding" />
+    <echo message="Eclipse上で実行している場合は、F5を押して最新状態にしてください。" />
+  </target>
+</project>

@@ -1,0 +1,6 @@
+errors.maxlength={0}が{1}バイトを超えています。
+errors.required={0}は省略できません。
+errors.duplicate={0}が重複しています。
+
+errors.relationship.child={0}から参照されているため、削除はできません。
+errors.relationship.parent={0}に対応するレコードが無いため、登録または更新はできません。

@@ -1,0 +1,156 @@
+#===========================================================
+#log4j
+#
+
+#Appenderの設定
+#  標準出力：org.apache.log4j.ConsoleAppender
+#  ファイル：org.apache.log4j.DailyRollingFileAppender
+#  未出力　：org.apache.log4j.varia.NullAppender
+log4j.appender=org.apache.log4j.ConsoleAppender
+
+#  ログファイル出力場所（ファイルに出力しない場合は未指定でも良い）
+log4j.file.path=
+
+#  ログファイルの文字コード
+log4j.encoding=$param.sourceEncoding
+
+#if($param.isContainOption("USING_ESB"))
+#===========================================================
+# ESBの設定情報
+#
+
+#ESBサーバとして動作する場合のサーバアドレス
+#通常はlocalhostで良い
+local.host=localhost
+
+#ESBサーバとして動作する場合のポート番号
+#重複しないようにすること
+local.port=10080
+
+#ESBサーバが稼働しているIPアドレス
+server.host=localhost
+#ESBサーバが稼働しているポート番号
+server.port=10080
+
+#WSDL格納ディレクトリ(絶対パス)
+wsdl.dir=@base.dir@/etc/wsdl
+
+#end
+
+#if($param.isContainOption("USING_DATABASE"))
+#===========================================================
+#データベースの設定情報
+#
+#使用するデータベースのタイプ
+#oracle、postgresql以外は非推奨
+#  Oracle系　　・・・oracle
+#  PostgreSQL系・・・postgresql
+#  MySQL系　　 ・・・mysql
+#  DB2系　　　 ・・・db2
+#  SQLServer系 ・・・mssql
+#  Derby系     ・・・derby
+torque.database.type=oracle
+
+#自動生成後するJavaプログラムの文字コード
+torque.output.src.encoding=$param.sourceEncoding
+
+#自動生成するSQLの文字コード
+torque.output.sql.encoding=$param.sourceEncoding
+
+#
+#Hibernate設定情報
+#
+#Dialectの設定
+#  Oracle10以降・・・org.hibernate.dialect.Oracle10gDialect
+#  Oracle9i    ・・・org.hibernate.dialect.Oracle9Dialect (?)
+#  Oracle8     ・・・org.hibernate.dialect.Oracle8iDialect (?)
+#  PostgreSQL  ・・・org.hibernate.dialect.PostgreSQLDialect
+#  MySQL       ・・・org.hibernate.dialect.MySQLDialect
+#              ・・・org.hibernate.dialect.MySQLInnoDBDialect
+#              ・・・org.hibernate.dialect.MySQL5Dialect
+#              ・・・org.hibernate.dialect.MySQL5InnoDBDialect
+#              ・・・org.hibernate.dialect.MySQLMyISAMDialect
+#その他        ・・・see http://docs.jboss.org/hibernate/stable/core/api/org/hibernate/dialect/package-summary.html
+hibernate.dialect=org.hibernate.dialect.SomeDialect
+
+#JDBCDriverクラス名
+# Oracle    ・・・oracle.jdbc.driver.OracleDriver
+# PostgreSQL・・・org.postgresql.Driver
+# MySQL     ・・・com.mysql.jdbc.Driver
+hibernate.jdbc.driver=DriverClassName(Full)
+
+#JDBCURL
+#  - 実行時にJNDI経由で接続する場合でも
+#    開発用のコマンド（DB-init等）で利用しているので
+#    設定しておくと便利です。
+# Oracle    ・・・ex) jdbc:oracle:thin:@localhost:1521:XE
+# PostgreSQL・・・ex) jdbc:postgresql://localhost:5432/foo
+# MySQL     ・・・ex) jdbc:mysql://localhost:3306/foo
+hibernate.jdbc.url=jdbc:[dbtype]:[jdbctype]:@[host]:[port]:[name]
+
+#データベース接続ユーザー
+hibernate.jdbc.user=userName
+
+#データベース接続ユーザーのパスワード
+hibernate.jdbc.pass=password
+
+#データソース接続(URL)：JNDI経由で接続する場合は必須
+hibernate.datasource.url=
+
+#Hibernateが生成したSQLを標準出力に出力するか否か
+hibernate.show.sql=true or false
+
+#データベースのスキーマ名
+# Oracle10g ・・・ユーザー名の大文字
+# PostgreSQL・・・public
+# MySQL     ・・・データベース名
+hibernate.schema=schema Name
+
+#HibernateのConnectionProviderの実装クラス名
+hibernate.connection.provider=org.hibernate.connection.DriverManagerConnectionProvider
+
+#コネクションプーリングの最小サイズ
+hibernate.pool.min=10
+
+#コネクションプーリングの最大サイズ
+hibernate.pool.max=10
+
+#JDBC Statementの最大保持する
+hibernate.max.statement=10
+
+#セッションタイムアウト間隔
+#（一定期間DBにアクセスがない場合に接続をリセットするまでの間隔）
+hibernate.timeout=
+
+# trueの場合はJUnitでテストを行う際にH2を用いてテストを行う
+useInMemoryDBWhenTest=false
+
+#end
+
+#if($param.isContainOption("USING_RDF_WEB_FR"))
+#===========================================================
+#Velocityの設定
+#
+
+#Velocityマクロの文字コード
+velocity.input.encoding=$param.sourceEncoding
+
+#Velocityが出力する際の文字コード
+velocity.output.encoding=$param.sourceEncoding
+
+#リソースローダーの設定
+#  ファイル取り込み　　　：file
+#  クラスパスから取り込み：class
+velocity.resource.loader=file
+
+#Velocityマクロ格納ディレクトリ（file以外なら未指定でも可）
+velocity.resource.root=@base.dir@/webapp/WEB-INF/velocity
+
+#Velocityマクロの更新チェック間隔（秒）
+velocity.file.check.interval=2
+
+#Velocity拡張マクロ
+#  プロジェクトで独自マクロを作成しない場合は「VM_global_library.vm」と
+#  指定しておくこと
+velocity.macro=VM_global_library.vm
+#end

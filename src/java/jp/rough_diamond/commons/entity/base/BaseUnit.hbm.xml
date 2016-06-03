@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping
+>
+
+    <class
+        name="jp.rough_diamond.commons.entity.Unit"
+        table="UNIT"
+    >
+        <cache usage="read-write" />
+
+        <id
+            name="id"
+            column="ID"
+            type="java.lang.Long"
+        >
+            <generator class="assigned">
+              <!--  
+                  To add non XDoclet generator parameters, create a file named 
+                  hibernate-generator-params-BaseUnit.xml 
+                  containing the additional parameters and place it in your merge dir. 
+              --> 
+            </generator>
+        </id>
+
+        <version
+            name="version"
+            column="VERSION"
+            type="java.lang.Long"
+        />
+
+        <property
+            name="name"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="NAME" 
+                length="32"
+                not-null="true"
+            />
+        </property>
+
+        <property
+            name="description"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="DESCRIPTION" 
+                length="64"
+                not-null="false"
+            />
+        </property>
+
+        <component
+            name="rate"
+            class="jp.rough_diamond.commons.entity.ScalableNumber"
+        >
+
+        <property
+            name="value"
+            type="java.lang.Long"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="RATE_VALUE" 
+                not-null="true"
+            />
+        </property>
+
+        <property
+            name="scale"
+            type="java.lang.Integer"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="RATE_SCALE" 
+                not-null="true"
+            />
+        </property>
+
+        </component>
+
+        <property
+            name="scale"
+            type="java.lang.Integer"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="SCALE" 
+                not-null="true"
+            />
+        </property>
+
+        <many-to-one
+            name="base"
+            class="jp.rough_diamond.commons.entity.Unit"
+            cascade="none"
+            outer-join="true"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="BASE_UNIT_ID" 
+            />
+        </many-to-one>
+
+        <!--
+            To add non XDoclet property mappings, create a file named
+                hibernate-properties-BaseUnit.xml
+            containing the additional properties and place it in your merge dir.
+        -->
+
+    </class>
+
+</hibernate-mapping>

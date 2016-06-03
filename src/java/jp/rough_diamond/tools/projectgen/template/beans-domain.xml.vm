@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="$param.sourceEncoding"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-lazy-init="true">
+#if($param.isContainOption("USING_DATABASE"))
+  <bean id="databaseCharset" class="java.lang.String">
+    <description>データベースの文字コード（文字列長チェックで使用）</description>
+    <constructor-arg index="0" type="java.lang.String"><value>UTF-8</value></constructor-arg>
+  </bean>
+#end
+#if($param.isContainOption("USING_RDF_WEB_FR"))
+  <bean id="velocityContext" class="java.util.HashMap">
+    <constructor-arg index="0">
+      <map>
+        <entry key="util" ><bean class="jp.rough_diamond.commons.velocity.VelocityUtils" /></entry>
+        <entry key="sharp" ><value>$srp</value></entry>
+        <entry key="nFormat" ><value>$srp,$srp$srp0</value></entry>
+        <entry key="maxLong" ><value>9223372036854775807</value></entry>
+      </map>
+    </constructor-arg>
+  </bean>
+  <bean id="velocityProperties" class="java.lang.String">
+    <description>velocity.properties</description>
+    <constructor-arg index="0" type="java.lang.String"><value>
+runtime.log.logsystem.class=org.apache.velocity.runtime.log.NullLogSystem
+input.encoding=@velocity.input.encoding@
+output.encoding=@velocity.output.encoding@
+directive.foreach.counter.name = velocityCount
+directive.foreach.counter.initial.value = 0
+directive.parse.max.depth = 10
+resource.loader = @velocity.resource.loader@
+class.resource.loader.description = Velocity Classpath Resource Loader
+class.resource.loader.class = org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+file.resource.loader.description = Velocity File Resource Loader
+file.resource.loader.class = org.apache.velocity.runtime.resource.loader.FileResourceLoader
+file.resource.loader.path = @velocity.resource.root@
+file.resource.loader.cache = true
+file.resource.loader.modificationCheckInterval = @velocity.file.check.interval@
+velocimacro.library = @velocity.macro@
+    </value></constructor-arg>
+  </bean>
+  <bean id="roleJudge" class="jp.rough_diamond.framework.user.SimpleRoleJudge">
+    <description>アクセス制御</description>
+  </bean>
+#end
+</beans>

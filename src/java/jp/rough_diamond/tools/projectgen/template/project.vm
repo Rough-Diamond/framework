@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+  <name>$param.projectName</name>
+  <comment></comment>
+  <projects>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+      <arguments>
+      </arguments>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+#if($param.appType.toString() == "WEBAPP_WITH_TOMCAT_PI")
+    <nature>com.sysdeo.eclipse.tomcat.tomcatnature</nature>
+#end
+  </natures>
+</projectDescription>

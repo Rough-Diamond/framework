@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="Windows-31J"?>
+
+<project name="Framework" basedir="." default="dummy">
+  <property name="lib.dir"                    value="./libs" />
+  <property name="other.lib.dir"              value="${lib.dir}" />
+  <property name="ci.preprocess.name"         value="doCopyTorqueGen" />
+  <property name="classes.dir"                value="./bin" />
+
+  <property name="cxf.dest.dir"               value="./src/test" />
+  <property name="cxf.stub.package"           value="jp.rough_diamond.sample.esb.service.stub" />
+  <property name="cxf.mule.server.config"     value="./src/test/mule/mule-server-config.xml" />
+  <property name="cxf.mule.client.config"     value="./src/test/mule/mule-client-config.xml" />
+  <property name="server.endpoint.prefix"     value="server" />
+
+  <property name="hibernate.cache.avalable"       value="true" />
+  <property name="sql.encoding"                   value="UTF-8" />
+
+  <import file="../framework/build-common.xml" />
+
+  <property name="product.version"            value="0.8.2" />
+
+  <!-- Torque関係 -->
+  <property name="torque.gen.patch.root"      value="${framework.root}/../torque-gen-patch" />
+  <property name="torque.patch.base.lib.dir"  value="${torque.gen.patch.root}/base/lib" />
+  <property name="torque.patch.patch.lib.dir" value="${torque.gen.patch.root}/patch/lib" />
+  <property name="torque.patch.dist.dir"      value="${torque.gen.patch.root}/dist" />
+
+  <property name="test.framework.dir"         value="./src/testingFramework" />
+
+  <path id="real.src.path">
+    <pathelement location="${src.dir}" />
+    <pathelement location="${test.framework.dir}" />
+  </path>
+
+  <path id="test.src.path">
+    <path refid="real.src.path" />
+    <pathelement location="${test.src.dir}" />
+    <pathelement location="src/moreTest" />
+  </path>
+
+  <path id="test.files.path">
+    <path refid="test.files.path.default" />
+    <fileset dir="src/moreTest">
+      <include name="${junit.src.pattern}" />
+    </fileset>
+  </path>
+
+  <target name="doCopyTorqueGen">
+    <ant antfile="${torque.gen.patch.root}/build.xml" target="dist" inheritAll="false"/>
+    <antcall target="copyTorque-gen" />
+  </target>
+
+  <property name="jacoco.report.name" 		value="Rough Diamond Framework" />
+  <property name="jacoco.classes.name"     	value="jacoco.classes" />
+  <path id="jacoco.classes">
+	<fileset dir="${test.classes.dir}_tmp">
+      <exclude name="**/base/*.class" />
+    </fileset>
+  </path>
+
+<!--
+  <target name="makeReleaseConfig" description="リリースモジュール用のbeans.xmlを作成する">
+    <property name="filtering.filename" value="${conf.dir}/filtering.release.properties" />
+    <antcall target="makeConfig" />
+  </target>
+-->
+
+  <target name="makeConfig" depends="init-task, filter-check, filter-exists, makeConfigBase" if="filtering.filename.present" description="EIを実行する">
+<!--
+    <antcall target="makeConfigBase" />
+    <basename property="conf.target.name" file="${filtering.filename}" />
+    <dirname property="conf.target.dir" file="${filtering.filename}" />
+    <mkdir dir="${conf.dir}/tmp" />
+    <native2ascii src="${conf.target.dir}" dest="${conf.dir}/tmp" includes="${conf.target.name}" />
+    <pathconvert property="my.build.dir.unix" targetos="unix">
+      <path location="${my.build.dir}"/>
+    </pathconvert>
+    <echo message="${my.build.dir.unix}" />
+    <filter token="base.dir"   value="${my.build.dir.unix}" />
+    <copy file="${conf.dir}/tmp/${conf.target.name}" tofile="${conf.dir}/tmp/${conf.target.name}.tmp" filtering="true" />
+    <filter filtersfile="${conf.dir}/tmp/${conf.target.name}.tmp" />
+-->
+    <copy file="${conf.dir}/template/beans.xml" tofile="${src.dir}/beans.xml" filtering="true" overwrite="true" />
+    <copy file="${conf.dir}/template/log4j.properties" tofile="${src.dir}/log4j.properties" filtering="true" overwrite="true" />
+    <copy file="${conf.dir}/template/cxfrouting.properties" tofile="${test.src.dir}/cxfrouting.properties" filtering="true" overwrite="true" encoding="UTF-8" />
+    <native2ascii src="${resource.dir}" dest="${src.dir}" includes="**/*.properties" />
+    <delete dir="${conf.dir}/tmp" />
+    <echo message="Eclipse上で実行している場合は、F5を押して最新状態にしてください。" />
+  </target>
+
+  <target name="makeSchemaAccessor" description="テーブルレイアウト、create table文、Javaソース、マッピングファイル、hibernateConfigを作成する">
+    <ant antfile="../framework/build-common.xml" target="makeSchemaAccessor" dir="${my.build.dir}" />
+    <antcall target="makeMultipleSQL" />
+  </target>
+
+  <target name="newProject" depends="init-task, makeJar" description="新しいプロジェクトを作成する">
+<!--
+    <copy file="${framework.dist.dir}/rd-framework-${product.version}.jar" todir="${lib.dir}/common/" />
+-->
+    <antcall target="doIt">
+      <param name="target" value="jp.rough_diamond.tools.projectgen.ProjectGeneratorGUI" />
+    </antcall>
+<!--
+    <delete file="${lib.dir}/common/rd-framework-${product.version}.jar"/>
+-->
+  </target>
+
+  <target name="makeJar" depends="compile" description="Jarファイルを作成する">
+    <jar destfile="${framework.dist.dir}/rd-framework-${product.version}.jar" basedir="${framework.classes.dir}">
+      <manifest>
+        <attribute name="Implementation-Vendor"   value="${framework.vendor}"/>
+        <attribute name="Implementation-Title"    value="Rough Diamond Framework Core"/>
+        <attribute name="Implementation-Version"  value="${framework.ant.extention.version}"/>
+      </manifest>
+    </jar>
+    <copy file="${framework.dist.dir}/rd-framework-${product.version}.jar" tofile="${framework.dist.dir}/rd-framework.jar" />
+    <!-- 下位互換性 そのうち消す -->
+    <copy file="${framework.lib.root}/cglib/cglib-2.1.3.jar" tofile="${framework.dist.dir}/cglib-2.1.3.jar" />
+  </target>
+
+  <target name="compile">
+    <echo message="${framework.dist.dir}" />
+    <echo message="${framework.classes.dir}" />
+    <delete dir="${framework.dist.dir}" />
+    <mkdir dir="${framework.classes.dir}" />
+    <antcall target="do.compile">
+      <param name="compile.src.roots"     value="real.src.path" />
+      <param name="compile.classpath"     value="classpath.all" />
+      <param name="compile.dest.dir"      value="${framework.classes.dir}" />
+      <param name="copy.resource.target"  value="copyRealResources" />
+    </antcall>
+  </target>
+
+  <target name="copyTorque-gen" description="Torque-Genのパッチを当てたものを当該プロジェクトへコピーする">
+    <ant antfile="${torque.gen.patch.root}/build.xml" target="dist" inheritAll="false"/>
+    <mkdir dir="${framework.root}/torque-gen/lib" />
+    <delete>
+      <fileset dir="${framework.root}/torque-gen/lib">
+        <include name="*.jar" />
+      </fileset>
+    </delete>
+    <copy todir="${framework.root}/torque-gen/lib">
+      <fileset dir="${torque.patch.base.lib.dir}">
+        <include name="*.jar" />
+      </fileset>
+    </copy>
+    <copy todir="${framework.root}/torque-gen/lib/" overwrite="true">
+      <fileset dir="${torque.patch.patch.lib.dir}">
+        <include name="*.jar" />
+      </fileset>
+    </copy>
+    <copy todir="${framework.root}/torque-gen/lib/" overwrite="true">
+      <fileset dir="${torque.patch.dist.dir}">
+        <include name="*.jar" />
+      </fileset>
+    </copy>
+    <copy file="${torque.patch.dist.dir}/build-torque.xml" tofile="${framework.root}/torque-gen/build-torque.xml" overwrite="true" />
+  </target>
+
+  <target name="dummy">
+    <echo message="xxxxx" />
+  </target>
+</project>

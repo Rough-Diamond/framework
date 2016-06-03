@@ -1,0 +1,398 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>framework tables</title>
+  <link rel="stylesheet" type="text/css" href="dataModel.css">
+</head>
+
+<body class="normalFont">
+  <table class="summarytable">
+    <tr class=summaryhead">
+      <th class="summaryheadbackground summaryborder summaryheadtablename">Table Name</th>
+      <th class="summaryheadbackground summaryborder summaryheadjavaname">OM Class</th>
+      <th class="summaryheadbackground summaryborder summaryheaddescription">Description</th>
+    </tr>
+    <tr class=summaryrow">
+      <td class="summarybackground summaryborder summarytablename"><a href="#UPDATE_TIMESTAMP" class="link summarytablenamelink">UPDATE_TIMESTAMP</a></td>
+      <td class="summarybackground summaryborder summaryjavaname">UpdateTimestamp</td>
+      <td class="summarybackground summaryborder summarydescription"> 更新日時情報</td>
+    </tr>
+    <tr class=summaryrow">
+      <td class="summarybackground summaryborder summarytablename"><a href="#AMOUNT" class="link summarytablenamelink">AMOUNT</a></td>
+      <td class="summarybackground summaryborder summaryjavaname">Amount</td>
+      <td class="summarybackground summaryborder summarydescription"> 量</td>
+    </tr>
+    <tr class=summaryrow">
+      <td class="summarybackground summaryborder summarytablename"><a href="#QUANTITY" class="link summarytablenamelink">QUANTITY</a></td>
+      <td class="summarybackground summaryborder summaryjavaname">Quantity</td>
+      <td class="summarybackground summaryborder summarydescription"> 量</td>
+    </tr>
+    <tr class=summaryrow">
+      <td class="summarybackground summaryborder summarytablename"><a href="#UNIT" class="link summarytablenamelink">UNIT</a></td>
+      <td class="summarybackground summaryborder summaryjavaname">Unit</td>
+      <td class="summarybackground summaryborder summarydescription"> 数量尺度</td>
+    </tr>
+    <tr class=summaryrow">
+      <td class="summarybackground summaryborder summarytablename"><a href="#SCALABLE_NUMBER" class="link summarytablenamelink">SCALABLE_NUMBER</a></td>
+      <td class="summarybackground summaryborder summaryjavaname">ScalableNumber</td>
+      <td class="summarybackground summaryborder summarydescription"> 小数点位置指定数値</td>
+    </tr>
+    <tr class=summaryrow">
+      <td class="summarybackground summaryborder summarytablename"><a href="#numbering" class="link summarytablenamelink">numbering</a></td>
+      <td class="summarybackground summaryborder summaryjavaname">Numbering</td>
+      <td class="summarybackground summaryborder summarydescription"> ナンバリングテーブル</td>
+    </tr>
+  </table>
+
+    <a name="UPDATE_TIMESTAMP"/>
+<h2>UPDATE_TIMESTAMP （クラスのみ）</h2>
+更新日時情報
+<p/>
+<table border="1" cellspacing="0">
+  <tr>
+    <th class="normalFont" bgcolor="#CCCCCC">Name</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Type</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Size</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Default</th>
+    <th class="normalFont" bgcolor="#CCCCCC">JavaName</th>
+    <th class="normalFont" bgcolor="#CCCCCC">PK</th>
+    <th class="normalFont" bgcolor="#CCCCCC">FK</th>
+    <th class="normalFont" bgcolor="#CCCCCC">not null</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Description</th>
+  </tr>
+    <tr>
+    <td class="normalFont" id="UPDATE_TIMESTAMPREGISTERER_DATE">REGISTERER_DATE</td>
+    <td class="normalFont">TIMESTAMP</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">registererDate</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">登録日時</td>
+  </tr>
+  <tr>
+    <td class="normalFont" id="UPDATE_TIMESTAMPLAST_MODIFIED_DATE">LAST_MODIFIED_DATE</td>
+    <td class="normalFont">TIMESTAMP</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">lastModifiedDate</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">最終更新日</td>
+  </tr>
+
+</table>
+<script>
+</script>
+
+    <a name="AMOUNT"/>
+<h2>AMOUNT （クラスのみ）</h2>
+量
+<p/>
+<table border="1" cellspacing="0">
+  <tr>
+    <th class="normalFont" bgcolor="#CCCCCC">Name</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Type</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Size</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Default</th>
+    <th class="normalFont" bgcolor="#CCCCCC">JavaName</th>
+    <th class="normalFont" bgcolor="#CCCCCC">PK</th>
+    <th class="normalFont" bgcolor="#CCCCCC">FK</th>
+    <th class="normalFont" bgcolor="#CCCCCC">not null</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Description</th>
+  </tr>
+    <tr>
+    <td class="normalFont" id="AMOUNTUNIT_ID">UNIT_ID</td>
+    <td class="normalFont">BIGINT</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">unitId</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont">数量尺度ID</td>
+  </tr>
+  <tr>
+    <td class="normalFont" id="SCALABLE_NUMBERQ_VALUE">Q_VALUE</td>
+    <td class="normalFont">BIGINT</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">quantity.value</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">量.量(整数)</td>
+  </tr>
+  <tr>
+    <td class="normalFont" id="SCALABLE_NUMBERQ_SCALE">Q_SCALE</td>
+    <td class="normalFont">INTEGER</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">quantity.scale</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">量.小数点位置。正の数なら左へ、負の数なら右へ移動させる</td>
+  </tr>
+
+
+</table>
+<script>
+</script>
+
+    <a name="QUANTITY"/>
+<h2>QUANTITY （クラスのみ）</h2>
+量
+<p/>
+<table border="1" cellspacing="0">
+  <tr>
+    <th class="normalFont" bgcolor="#CCCCCC">Name</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Type</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Size</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Default</th>
+    <th class="normalFont" bgcolor="#CCCCCC">JavaName</th>
+    <th class="normalFont" bgcolor="#CCCCCC">PK</th>
+    <th class="normalFont" bgcolor="#CCCCCC">FK</th>
+    <th class="normalFont" bgcolor="#CCCCCC">not null</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Description</th>
+  </tr>
+    <tr>
+    <td class="normalFont" id="QUANTITYUNIT_ID">UNIT_ID</td>
+    <td class="normalFont">BIGINT</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">unitId</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont">数量尺度ID</td>
+  </tr>
+  <tr>
+    <td class="normalFont" id="SCALABLE_NUMBERA_VALUE">A_VALUE</td>
+    <td class="normalFont">BIGINT</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">amount.value</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">量.量(整数)</td>
+  </tr>
+  <tr>
+    <td class="normalFont" id="SCALABLE_NUMBERA_SCALE">A_SCALE</td>
+    <td class="normalFont">INTEGER</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">amount.scale</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">量.小数点位置。正の数なら左へ、負の数なら右へ移動させる</td>
+  </tr>
+
+
+</table>
+<script>
+</script>
+
+    <a name="UNIT"/>
+<h2>UNIT </h2>
+数量尺度
+<p/>
+<table border="1" cellspacing="0">
+  <tr>
+    <th class="normalFont" bgcolor="#CCCCCC">Name</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Type</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Size</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Default</th>
+    <th class="normalFont" bgcolor="#CCCCCC">JavaName</th>
+    <th class="normalFont" bgcolor="#CCCCCC">PK</th>
+    <th class="normalFont" bgcolor="#CCCCCC">FK</th>
+    <th class="normalFont" bgcolor="#CCCCCC">not null</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Description</th>
+  </tr>
+    <tr>
+    <td class="normalFont" id="UNITID">ID</td>
+    <td class="normalFont">BIGINT</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">id</td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">OID</td>
+  </tr>
+  <tr>
+    <td class="normalFont" id="UNITNAME">NAME</td>
+    <td class="normalFont">VARCHAR</td>
+    <td class="normalFont"> (32) </td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">name</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">数量尺度名</td>
+  </tr>
+  <tr>
+    <td class="normalFont" id="UNITDESCRIPTION">DESCRIPTION</td>
+    <td class="normalFont">VARCHAR</td>
+    <td class="normalFont"> (64) </td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">description</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont">単位説明</td>
+  </tr>
+  <tr>
+    <td class="normalFont" id="UNITBASE_UNIT_ID">BASE_UNIT_ID</td>
+    <td class="normalFont">BIGINT</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">baseUnitId</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont">ベース数量尺度</td>
+  </tr>
+  <tr>
+    <td class="normalFont" id="SCALABLE_NUMBERRATE_VALUE">RATE_VALUE</td>
+    <td class="normalFont">BIGINT</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">rate.value</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">変換係数.量(整数)</td>
+  </tr>
+  <tr>
+    <td class="normalFont" id="SCALABLE_NUMBERRATE_SCALE">RATE_SCALE</td>
+    <td class="normalFont">INTEGER</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">rate.scale</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">変換係数.小数点位置。正の数なら左へ、負の数なら右へ移動させる</td>
+  </tr>
+
+  <tr>
+    <td class="normalFont" id="SCALABLE_NUMBERSCALE">SCALE</td>
+    <td class="normalFont">INTEGER</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">scale</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">変換時に保持する小数精度。負数を指定すると整数の切捨て判断する</td>
+  </tr>
+  <tr>
+    <td class="normalFont" id="SCALABLE_NUMBERVERSION">VERSION</td>
+    <td class="normalFont">BIGINT</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">version</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">楽観的ロッキングキー</td>
+  </tr>
+
+</table>
+<script>
+</script>
+
+    <a name="SCALABLE_NUMBER"/>
+<h2>SCALABLE_NUMBER （クラスのみ）</h2>
+小数点位置指定数値
+<p/>
+<table border="1" cellspacing="0">
+  <tr>
+    <th class="normalFont" bgcolor="#CCCCCC">Name</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Type</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Size</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Default</th>
+    <th class="normalFont" bgcolor="#CCCCCC">JavaName</th>
+    <th class="normalFont" bgcolor="#CCCCCC">PK</th>
+    <th class="normalFont" bgcolor="#CCCCCC">FK</th>
+    <th class="normalFont" bgcolor="#CCCCCC">not null</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Description</th>
+  </tr>
+    <tr>
+    <td class="normalFont" id="SCALABLE_NUMBERVALUE">VALUE</td>
+    <td class="normalFont">BIGINT</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">value</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">量(整数)</td>
+  </tr>
+  <tr>
+    <td class="normalFont" id="SCALABLE_NUMBERSCALE">SCALE</td>
+    <td class="normalFont">INTEGER</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">scale</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">小数点位置。正の数なら左へ、負の数なら右へ移動させる</td>
+  </tr>
+
+</table>
+<script>
+</script>
+
+    <a name="numbering"/>
+<h2>numbering </h2>
+ナンバリングテーブル
+<p/>
+<table border="1" cellspacing="0">
+  <tr>
+    <th class="normalFont" bgcolor="#CCCCCC">Name</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Type</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Size</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Default</th>
+    <th class="normalFont" bgcolor="#CCCCCC">JavaName</th>
+    <th class="normalFont" bgcolor="#CCCCCC">PK</th>
+    <th class="normalFont" bgcolor="#CCCCCC">FK</th>
+    <th class="normalFont" bgcolor="#CCCCCC">not null</th>
+    <th class="normalFont" bgcolor="#CCCCCC">Description</th>
+  </tr>
+    <tr>
+    <td class="normalFont" id="numberingid">id</td>
+    <td class="normalFont">VARCHAR</td>
+    <td class="normalFont"> (128) </td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">id</td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">ＩＤ</td>
+  </tr>
+  <tr>
+    <td class="normalFont" id="numberingnext_number">next_number</td>
+    <td class="normalFont">BIGINT</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont"> &nbsp;</td>
+    <td class="normalFont">nextNumber</td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center>  &nbsp; </center></td>
+    <td class="normalFont"><center> X </center></td>
+    <td class="normalFont">現在割り当てている番号</td>
+  </tr>
+
+</table>
+<script>
+</script>
+
+
+</body>
+</html>

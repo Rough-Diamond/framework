@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-lazy-init="true">
+  <bean id="dummyText" class="java.lang.String">
+    <description>テスト用</description>
+    <constructor-arg index="0" type="java.lang.String">
+      <value>hogehoge</value>
+    </constructor-arg>
+  </bean>
+<!--
+  <bean id="jp.rough_diamond.commons.service.NumberingService" class="jp.rough_diamond.commons.service.hibernate.HibernateNumberingService">
+    <description>NumberingService</description>
+    <constructor-arg index="0"><value>100</value></constructor-arg>
+    <constructor-arg index="1"><value>true</value></constructor-arg>
+  </bean>
+-->
+  <bean id="hogeMonitor" class="jp.rough_diamond.commons.util.jobmonitor.CronJobMonitor">
+    <constructor-arg index="0">
+      <list>
+      </list>
+    </constructor-arg>
+  </bean>
+</beans>

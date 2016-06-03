@@ -1,0 +1,47 @@
+<?xml version="1.0" ?><wsdl:definitions name="MonoOperationService" targetNamespace="http://service.esb.sample.rough_diamond.jp/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://service.esb.sample.rough_diamond.jp/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://service.esb.sample.rough_diamond.jp/" xmlns:tns="http://service.esb.sample.rough_diamond.jp/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="foo" type="tns:foo"></xsd:element>
+    <xsd:complexType name="foo">
+        <xsd:sequence></xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="fooResponse" type="tns:fooResponse"></xsd:element>
+    <xsd:complexType name="fooResponse">
+        <xsd:sequence></xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="fooResponse">
+    <wsdl:part element="tns:fooResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="foo">
+    <wsdl:part element="tns:foo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="MonoOperationServicePortType">
+    <wsdl:operation name="foo">
+      <wsdl:input message="tns:foo" name="foo">
+    </wsdl:input>
+      <wsdl:output message="tns:fooResponse" name="fooResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MonoOperationServiceSoapBinding" type="tns:MonoOperationServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"></soap:binding>
+    <wsdl:operation name="foo">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="foo">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="fooResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MonoOperationService">
+    <wsdl:port binding="tns:MonoOperationServiceSoapBinding" name="MonoOperationServicePort">
+      <soap:address location="http://localhost:10080/services/MonoOperationService"></soap:address>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

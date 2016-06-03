@@ -1,0 +1,10 @@
+RDF Core Change Log
+===================
+
+0.8.1から???への変更点(2009.xx.xx)
+  see:
+    https://dev.rough-diamond.jp/trac/framework/wiki/changelog#changelog_0_8_2
+
+0.8から0.8.1の変更点(2009.4.16)
+  see:
+    https://dev.rough-diamond.jp/trac/framework/wiki/changelog#changelog_0_8_1

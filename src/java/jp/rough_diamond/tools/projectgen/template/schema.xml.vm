@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="$param.sourceEncoding" standalone="no"?>
+<!--
+<!DOCTYPE database SYSTEM "http://db.apache.org/torque/dtd/database_3_3.dtd">
+　※１．独自拡張を行っているためDTD参照は行いません。
+　　　　DTD参照を行う場合は、typeに別スキーマを参照できません
+　※２．packageに展開するパッケージ名を記述してください。
+　　　　パッケージ名の最後は「entity」としてください
+　※３．親子関係があるテーブルの場合子を先に記述してください。
+-->
+<database defaultIdMethod="none" name="${param.projectName}-Schema" package="" defaultJavaType="object">
+<!-- 
+      Hibernate強引対応拡張ルール
+      その１．
+        親子間のリレーションが有る場合、子の方にはouter joinが自動的に付与
+        その際のアクセサは「/database/table*/foreign-key@name」となる
+      その２．
+        autoIncrementをtrueにすると、そのカラムはバージョニングカラムとなるようにする。
+        （typeはINTEGERもしくはBIGINT)
+        その代わり、自動インクリメント機能はなくなるので注意
+        なお、columnタグのdomain属性をoptimistickLockKeyとした場合にも同様に機能します。
+　　　　将来的には後者のみにする予定なので、バージョニングカラムを作成する場合は、
+        後者の方式を採用してください。
+      その３．
+      　required="true"のカラムには必須チェックが自動的に付与される
+      その４．
+      　sizeが指定されている文字列系のカラムについては自動的にサイズチェックが付与される
+　　　その５．
+　　　　uniqueタグを定義した場合にはユニークチェックが自動的に付与されます。
+      その６．
+　　　　skipSql=trueとしたテーブル定義は他のテーブルのtypeとして指定することができます。
+　　　　その場合、データベースには元のテーブルに定義したカラムが内部展開されます。
+　　　　なお、Oracle等カラム名の長さに制限がある場合はあふれる可能性が高いので、
+　　　　カラム名は短くし、javaNameでメソッドの可読性は高めるようにしてください。
+　　　その７．
+　　　　baseClassにスキーマ以外のクラスを指定できるようにしています。
+　　　その８．
+        baseClassに指定したクラスがテーブル定義をしていてかつ、skipSql=trueの場合は、
+　　　　baseClassに指定したクラスに対応するテーブル定義内のカラムが内部展開されます。
+      その９．
+        baseClassに指定したクラスがテーブル定義でかつ、skipSql=false（未指定）の場合は、
+        カラムの内部展開は行わずクラスのみ継承関係を持つようにしています。
+　　　　この場合、主キーは親クラス（テーブル）と合わせてください
+-->
+#set($frameworkPath = $param.frameworkPathRelative)
+  <external-schema filename="../../${frameworkPath}/etc/schema/framework-schema.xml" />
+</database>

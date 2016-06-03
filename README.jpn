@@ -1,0 +1,19 @@
+本リポジトリにはライセンスの関係上、以下のファイルを同梱していませんので
+メイク時にはインターネット経由で取得します。インターネットに接続できない
+環境ではお手数ではありますが手動にて所定のディレクトリにファイルを配置し
+てください。
+
+
+ライブラリ(名前）   バージョン    格納ディレクトリ  URL
+cglib-2.1.3.jar               2.1.3_p01     libs/cglib        http://dev.rough-diamond.jp/svn/framework/patches/cglib/tags/2.1.3_p01/cglib/cglib-2.1.3_p01.jar
+                                                              ファイル名を「cglib-2.1.3.jar」に変更してください
+cobertula.jar                 1.9.1         libs/cobertula    http://dev.rough-diamond.jp/svn/framework/patches/cobertura/tags/1.9.0_p01/cobertura/cobertura-1.9.0_p01.jar
+                                                              ファイル名を「cobertura.jar」に変更してください
+dbunit.jar                    2.1_p01       libs/dbunit/      http://dev.rough-diamond.jp/svn/framework/patches/dbunit/tags/2.1_p01/dbunit/dbunit-2.1_p01.jar
+                                                              ファイル名を「dbunit.jar」に変更してください
+servlet-api.jar               2.5           libs/servletapi   http://www.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-6/v6.0.18/bin/apache-tomcat-6.0.18.zip
+                                                              jarのみの配布はされていないようなのでzipからjarを取り出してください
+jsp-api.jar                   2.1           libs/servletapi   http://www.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-6/v6.0.18/bin/apache-tomcat-6.0.18.zip
+                                                              jarのみの配布はされていないようなのでzipからjarを取り出してください
+xdoclet-hibernate-module.jar  1.2.3_p01     libs/xdoclet      http://dev.rough-diamond.jp/svn/framework/patches/xdoclet-hibernate-module/tags/1.2.3_p01/xdoclet-hibernate-module/xdoclet-hibernate-module-1.2.3_p01.jar
+                                                              ファイル名を「xdoclet-hibernate-module.jar」に変更してください

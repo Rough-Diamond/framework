@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="$param.sourceEncoding"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+     version="2.4">
+
+  <display-name>$param.projectName</display-name>
+#if($param.isContainOption("USING_ESB"))
+<!--
+  ServiceBusを起動するリスナ
+-->
+  <listener>
+    <listener-class>jp.rough_diamond.framework.es.MuleListener</listener-class>
+  </listener>
+#end
+
+<!--
+  リクエストの文字コード
+　encodingがUTF-8以外の場合は値を書き替えてください
+-->
+  <filter>
+    <filter-name>JapaneseEncoder</filter-name>
+    <filter-class>
+      jp.rough_diamond.framework.web.filter.request_encoder.RequestEncodingFilter
+    </filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+
+#if($param.isContainOption("USING_RDF_WEB_FR"))
+<!--
+  リクエスト処理中のローケルを
+　HttpRequestのローケルに合わせます
+-->
+  <filter>
+    <filter-name>LocaleFilter</filter-name>
+    <filter-class>
+      jp.rough_diamond.commons.resource.LocaleFilter
+    </filter-class>
+  </filter>
+
+<!--
+  ユーザーオブジェクトを保持するセッション名を指定し、
+　セッション解放時には不要となったオブジェクトをクリアします。
+-->
+  <filter>
+    <filter-name>userCacheFilter</filter-name>
+    <filter-class>
+      jp.rough_diamond.framework.user.UserCacheFilter
+    </filter-class>
+    <init-param>
+      <param-name>sessionName</param-name>
+      <param-value>user</param-value>
+    </init-param>
+    <init-param>
+      <param-name>clearObjectPrefix</param-name>
+      <param-value>jp.rough_diamond.account</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>JapaneseEncoder</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>LocaleFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>userCacheFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+
+  <!-- Standard Action Servlet Configuration (with debugging) -->
+  <servlet>
+    <servlet-name>action</servlet-name>
+    <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+    <init-param>
+      <param-name>config</param-name>
+      <param-value>/WEB-INF/struts-config.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <init-param>
+      <param-name>detail</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+
+  <!-- Standard Action Servlet Mapping -->
+  <servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+#end
+
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+
+
+  <!-- The Usual Welcome File List -->
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

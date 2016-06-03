@@ -1,0 +1,18 @@
+# ALL, DEBUG, INFO, WARN, ERROR, FATAL and OFF
+log4j.rootCategory=WARN, A1
+#log4j.category.org.apache=WARN
+#log4j.category.org.hibernate=WARN
+#log4j.category.org.springframework=WARN
+#log4j.category.net.sf=WARN
+#log4j.category.org.hibernate.SQL=DEBUG
+#log4j.category.jp.rough_diamond=DEBUG
+#log4j.category.jp.rough_diamond.framework=WARN
+#log4j.category.jp.rough_diamond.commons=WARN
+#log4j.category.org.mule=WARN
+
+log4j.appender.A1=@log4j.appender@
+log4j.appender.A1.encoding=@log4j.encoding@
+log4j.appender.A1.File=@log4j.file.path@
+log4j.appender.A1.DatePattern='.'yyyy-MM-dd
+log4j.appender.A1.layout=org.apache.log4j.PatternLayout
+log4j.appender.A1.layout.ConversionPattern=%d{ISO8601} [%p] %c (%F:%L) %t %x: %m%n

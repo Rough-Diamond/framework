@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  定義方法
+  ・services/service@class
+      - クラス名をフルパッケージで記述
+  ・services/service/description
+      - クラスの説明を記述（省略可）
+  ・services/service/operation@name
+      - メソッド名を記述
+  ・services/service/operation@returnType
+      - 戻り値の型を記述
+  ・services/service/operation/arg@name
+      - 引数名を記述
+  ・services/service/operation/arg@type
+      - 引数の型を記述
+  サンプル
+  <service class="jp.rough_diamond.sample.esb.service.SampleService">
+    <description>サンプルサービス</description>
+    <operation name="sayHello" returnType="void">
+      <arg type="java.lang.String" name="name" />
+    </operation>
+  </service>
+-->
+<services>
+  <service class="jp.rough_diamond.sample.esb.service.SampleService">
+    <description>サンプルサービス</description>
+    <operation name="sayHello" returnType="void">
+    </operation>
+    <operation name="sayHello2" returnType="String">
+    </operation>
+    <operation name="sayHello3" returnType="String">
+      <arg type="String" name="name" />
+    </operation>
+  </service>
+</services>

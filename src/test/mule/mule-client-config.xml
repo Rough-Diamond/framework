@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><mule xmlns="http://www.mulesource.org/schema/mule/core/2.1" xmlns:context="http://www.springframework.org/schema/context" xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.1" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="                  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd                  http://www.mulesource.org/schema/mule/cxf/2.1 http://www.mulesource.org/schema/mule/cxf/2.1/mule-cxf.xsd                  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd                  http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd                  http://www.mulesource.org/schema/mule/vm/2.1 http://www.mulesource.org/schema/mule/vm/2.1/mule-vm.xsd                  http://www.mulesource.org/schema/mule/servlet/2.1 http://www.mulesource.org/schema/mule/servlet/2.1/mule-servlet.xsd">
+
+  <context:property-placeholder location="cxfrouting.properties"/>
+
+
+  <model name="SampleServiceConnectorModel">
+    
+  
+    
+  
+    <service name="SampleServiceConnector_sayHello">
+      <inbound>
+        <vm:inbound-endpoint path="SampleServiceConnector_sayHelloIn"/>
+      </inbound>
+      <bridge-component/>
+      <outbound>
+        <custom-outbound-router class="jp.rough_diamond.framework.es.DynamicEndPointRouter">
+          <cxf:outbound-endpoint address="http://${server.host}:${server.port}/services/SampleService" clientClass="jp.rough_diamond.sample.esb.service.stub.sampleservice.SampleService" mtomEnabled="true" operation="sayHello" wsdlLocation="file:///${wsdl.dir}/SampleService.wsdl" wsdlPort="SampleServicePort">
+            <custom-transformer class="jp.rough_diamond.sample.esb.service.stub.sampleservice.ObjectToJAXBElement_SayHello" name="SampleServiceConnector_sayHelloInTransformer"/>
+          </cxf:outbound-endpoint>
+        </custom-outbound-router>
+      </outbound>
+    </service>
+  
+    <service name="SampleServiceConnector_sayHello2">
+      <inbound>
+        <vm:inbound-endpoint path="SampleServiceConnector_sayHello2In"/>
+      </inbound>
+      <bridge-component/>
+      <outbound>
+        <custom-outbound-router class="jp.rough_diamond.framework.es.DynamicEndPointRouter">
+          <cxf:outbound-endpoint address="http://${server.host}:${server.port}/services/SampleService" clientClass="jp.rough_diamond.sample.esb.service.stub.sampleservice.SampleService" mtomEnabled="true" operation="sayHello2" wsdlLocation="file:///${wsdl.dir}/SampleService.wsdl" wsdlPort="SampleServicePort">
+            <custom-transformer class="jp.rough_diamond.sample.esb.service.stub.sampleservice.ObjectToJAXBElement_SayHello2" name="SampleServiceConnector_sayHello2InTransformer"/>
+          </cxf:outbound-endpoint>
+        </custom-outbound-router>
+      </outbound>
+    </service>
+  
+    <service name="SampleServiceConnector_sayHello3">
+      <inbound>
+        <vm:inbound-endpoint path="SampleServiceConnector_sayHello3In"/>
+      </inbound>
+      <bridge-component/>
+      <outbound>
+        <custom-outbound-router class="jp.rough_diamond.framework.es.DynamicEndPointRouter">
+          <cxf:outbound-endpoint address="http://${server.host}:${server.port}/services/SampleService" clientClass="jp.rough_diamond.sample.esb.service.stub.sampleservice.SampleService" mtomEnabled="true" operation="sayHello3" wsdlLocation="file:///${wsdl.dir}/SampleService.wsdl" wsdlPort="SampleServicePort">
+            <custom-transformer class="jp.rough_diamond.sample.esb.service.stub.sampleservice.ObjectToJAXBElement_SayHello3" name="SampleServiceConnector_sayHello3InTransformer"/>
+          </cxf:outbound-endpoint>
+        </custom-outbound-router>
+      </outbound>
+    </service>
+  </model>
+</mule>

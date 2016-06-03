@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="Shift_JIS" standalone="no"?>
+
+<!--
+DTDは、
+
+ DOCTYPE database SYSTEM "http://db.apache.org/torque/dtd/database_3_3.dtd"
+です。
+ /database/table/columnタグにencrypt属性（デフォルトfalse）を追加しています。
+-->
+<database defaultIdMethod="none" name="framework tables" package="jp.rough_diamond.commons.entity" defaultJavaType="object">
+  <option key="sourceHeader" value="license.vm" />
+  <!-- 
+      Hibernate強引対応拡張ルール
+      その１．
+        親子間のリレーションが有る場合、子の方にはouter joinが自動的に付与
+        その際のアクセサは「/database/table*/foreign-key@name」となる
+      その２．
+        autoIncrementをtrueにすると、そのカラムはバージョニングカラムとなるようにする。
+        （typeはINTEGER)
+        その代わり、自動インクリメント機能はなくなるので注意
+      その３．
+      　required="true"のカラムには必須チェックが自動的に付与される
+      その４．
+      　sizeが指定されている文字列系のカラムについては自動的にサイズチェックが付与される
+  -->
+  <domain name="oid"                type="BIGINT" description="オブジェクトID" />
+  <domain name="optimistickLockKey" type="BIGINT" description="楽観的ロッキングキー" />
+
+  <table name="UPDATE_TIMESTAMP" description="更新日時情報" skipSql="true">
+    <column name="REGISTERER_DATE"              required="true"   type="TIMESTAMP"            description="登録日時" />
+    <column name="LAST_MODIFIED_DATE"           required="true"   type="TIMESTAMP"            description="最終更新日" />
+  </table>
+
+  <table name="AMOUNT"  description="量" baseClass="java.lang.Number" skipSql="true">
+    <!-- 単位無しを見越してUNIT_IDはnull許可 -->
+    <column name="UNIT_ID"                        required="false"  domain="oid"                description="数量尺度ID" />
+    <column name="Q"  javaName="quantity"         required="true"   type="SCALABLE_NUMBER"      description="量" />
+    <foreign-key foreignTable="UNIT" name="unit" onUpdate="restrict" onDelete="restrict">
+      <reference local="UNIT_ID" foreign="ID" />
+    </foreign-key>
+  </table>
+
+  <table name="QUANTITY"  description="量" baseClass="java.lang.Number" skipSql="true">
+    <!-- 単位無しを見越してUNIT_IDはnull許可 -->
+    <column name="UNIT_ID"                        required="false"  domain="oid"                description="数量尺度ID" />
+    <column name="A"  javaName="amount"           required="true"   type="SCALABLE_NUMBER"      description="量" />
+    <foreign-key foreignTable="UNIT" name="unit" onUpdate="restrict" onDelete="restrict">
+      <reference local="UNIT_ID" foreign="ID" />
+    </foreign-key>
+  </table>
+
+  <table name="UNIT" description="数量尺度">
+    <option key="cache" value="read-only" />
+    <column name="ID"           primaryKey="true" required="true"   domain="oid"                description="OID" />
+    <column name="NAME"                           required="true"   type="VARCHAR"  size="32"   description="数量尺度名">
+      <option key="maxCharLength" value="16" />
+    </column>
+    <column name="DESCRIPTION"                    required="false"  type="VARCHAR"  size="64"   description="単位説明" />
+    <column name="BASE_UNIT_ID"                   required="false"   type="BIGINT"               description="ベース数量尺度" />
+    <column name="RATE"                           required="true"   type="SCALABLE_NUMBER"      description="変換係数" />
+    <column name="SCALE"                          required="true"   type="INTEGER"              description="変換時に保持する小数精度。負数を指定すると整数の切捨て判断する" />
+    <column name="VERSION"                        required="true"   domain="optimistickLockKey" description="楽観的ロッキングキー" />
+    <foreign-key foreignTable="UNIT" name="base" onUpdate="restrict" onDelete="restrict">
+      <reference local="BASE_UNIT_ID" foreign="ID" />
+    </foreign-key>
+  </table>
+
+  <table name="SCALABLE_NUMBER"  description="小数点位置指定数値" baseClass="java.lang.Number" skipSql="true">
+    <column name="VALUE"                          required="true"   type="BIGINT"               description="量(整数)" />
+    <column name="SCALE"                          required="true"   type="INTEGER"              description="小数点位置。正の数なら左へ、負の数なら右へ移動させる" />
+  </table>
+
+  <table name="numbering" description="ナンバリングテーブル">
+    <column name="id"             primaryKey="true" required="true" type="VARCHAR" size="128"     description="ＩＤ" />
+    <column name="next_number"                      required="true" type="BIGINT"         description="現在割り当てている番号" />
+  </table>
+</database>

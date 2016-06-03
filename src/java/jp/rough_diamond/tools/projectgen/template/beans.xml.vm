@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="$param.sourceEncoding"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans default-lazy-init="true">
+  <import resource="beans-domain.xml" />
+
+#if($param.isContainOption("USING_DATABASE"))
+  <bean id="connectionManager" class="jp.rough_diamond.framework.transaction.hibernate.HibernateConnectionManager">
+    <description>Hibernate用のトランザクションマネージャ</description>
+    <property name="interceptor"><bean class="jp.rough_diamond.commons.service.hibernate.BasicServiceInterceptor" /></property>
+    <property name="listenersMap">
+      <map>
+        <entry key="load">
+          <list>
+            <value>jp.rough_diamond.commons.service.hibernate.LoadEventListenerExt</value>
+          </list>
+        </entry>
+      </map>
+    </property>
+  </bean>
+  <bean id="useInMemoryDBWhenTest" class="java.lang.String">
+    <description>JUnitでテストを行う際にH2を用いてテストを行う</description>
+    <constructor-arg index="0" type="java.lang.String"><value>@useInMemoryDBWhenTest@</value></constructor-arg>
+  </bean>
+#end
+
+#if($param.isContainOption("USING_ESB"))
+  <bean id="serviceBus" class="jp.rough_diamond.framework.es.ServiceBus">
+    <description>ServiceBus(MuleServer Wrapper)</description>
+    <property name="config">
+      <value>mule/mule-common-config.xml mule/mule-server-config.xml mule/mule-client-config.xml</value>
+    </property>
+  </bean>
+#end
+
+  <bean id="serviceFinder" class="jp.rough_diamond.framework.service.ServiceFinderChain">
+    <description>ServiceFinder</description>
+    <constructor-arg index="0">
+      <list>
+#if($param.isContainOption("USING_ESB"))
+        <bean class="jp.rough_diamond.framework.es.ServiceFinder" />
+#end
+#if($param.isContainOption("USING_DATABASE"))
+        <bean class="jp.rough_diamond.framework.transaction.ServiceFinder" />
+#end
+        <bean class="jp.rough_diamond.framework.service.SimpleServiceFinder" />
+      </list>
+    </constructor-arg>
+  </bean>
+
+#if($param.isContainOption("USING_DATABASE"))
+  <bean id="transactionInterceptor" class="jp.rough_diamond.framework.transaction.hibernate.HibernateAnotationTransactionManager">
+    <description>アノテーションによってトランザクションを制御するInterceptor</description>
+  </bean>
+#end
+
+  <!-- 
+    Webの場合はLocaleControllerByThreadLocalにすること
+    SimpleLocaleControllerは、動作ＯＳ上の言語情報からローケルを特定するのでまずい
+  -->
+#if($param.isContainOption("USING_RDF_WEB_FR"))
+  <bean id="localeController" class="jp.rough_diamond.commons.resource.LocaleControllerByThreadLocal">
+    <description>どのレイヤからも透過的にローケルに対してアクセス可能なインタフェース</description>
+  </bean>
+#else
+  <bean id="localeController" class="jp.rough_diamond.commons.resource.SimpleLocaleController">
+    <description>どのレイヤからも透過的にローケルに対してアクセス可能なインタフェース</description>
+  </bean>
+#end
+
+  <bean id="resourceName" class="java.lang.String">
+    <description>リソースファイル名</description>
+    <constructor-arg index="0" type="java.lang.String">
+      <value>
+        messageResource,
+#if($param.isContainOption("USING_DATABASE"))
+        schemaResources
+#end
+      </value>
+    </constructor-arg>
+  </bean>
+  
+  <!-- 
+    Webの場合はUserControllerByThreadLocalにすること
+    SimpleUserControllerは、ＶＭで一意のユーザー管理となるのでまずい
+  -->
+#if($param.isContainOption("USING_RDF_WEB_FR"))
+  <bean id="userController" class="jp.rough_diamond.framework.user.UserControllerByThreadLocal">
+    <description>どのレイヤからも透過的にユーザーに対してアクセス可能なインタフェース</description>
+  </bean>
+#else
+  <bean id="userController" class="jp.rough_diamond.framework.user.SimpleUserController">
+    <description>どのレイヤからも透過的にユーザーに対してアクセス可能なインタフェース</description>
+  </bean>
+#end
+
+#if($param.isContainOption("USING_RDF_WEB_FR"))
+  <bean id="velocityWrapper" class="jp.rough_diamond.commons.velocity.VelocityWrapper">
+    <description>VelocityWrapper</description>
+    <constructor-arg index="0"><ref bean="velocityProperties" /></constructor-arg>
+    <constructor-arg index="1"><ref bean="velocityContext" /></constructor-arg>
+  </bean>
+#end
+</beans>

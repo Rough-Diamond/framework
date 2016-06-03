@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+  <classpathentry kind="src" path="src/java"/>
+  <classpathentry kind="src" path="src/test"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+#if($param.appType.toString() == "WEBAPP_WITH_TOMCAT_PI")
+  <classpathentry kind="var" path="TOMCAT_HOME/lib/servlet-api.jar"/>
+  <classpathentry kind="var" path="TOMCAT_HOME/lib/jasper.jar"/>
+  <classpathentry kind="var" path="TOMCAT_HOME/lib/jsp-api.jar"/>
+  <classpathentry kind="var" path="TOMCAT_HOME/lib/el-api.jar"/>
+  <classpathentry kind="var" path="TOMCAT_HOME/lib/annotations-api.jar"/>
+#end
+#foreach($libName in $builder.libNameSet)
+  <classpathentry kind="lib" path="${libName}"/>
+#end
+#if($param.appType.toString() == "SIMPLE")
+  <classpathentry kind="output" path="bin"/>
+#else
+  <classpathentry kind="output" path="webapp/WEB-INF/classes"/>
+#end
+</classpath>

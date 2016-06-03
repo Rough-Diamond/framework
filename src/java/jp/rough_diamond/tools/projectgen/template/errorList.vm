@@ -1,0 +1,9 @@
+${srp}if(${doll}currentForm.message.hasError())
+<div id="errorMessage">
+  ${srp}foreach(${doll}property in ${doll}currentForm.message.properties)
+    ${srp}foreach(${doll}msg in ${doll}currentForm.message.get(${doll}property))
+    ${doll}msg<br>
+    ${srp}end  
+  ${srp}end
+</div>  
+${srp}end

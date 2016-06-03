@@ -1,0 +1,40 @@
+package ${service.packageName}.impl;
+
+##import ${service.packageName}.${service.className};
+#foreach ($import in $service.imports )
+import $import;
+#end
+
+@SuppressWarnings("all")
+public class ${service.className}Impl implements ${service.packageName}.${service.className} {
+#foreach ($op in $service.operations)
+    public $op.returnType ${op.name}(
+#set($delimiter = "")
+#foreach ($arg in $op.args)
+            ${delimiter}${arg.type} $arg.name
+#set($delimiter = ", ")
+#end
+    ) 
+    {
+#if($op.returnType == "byte")
+        return (byte)0;
+#elseif($op.returnType == "short")
+        return (short)0;
+#elseif($op.returnType == "int")
+        return 0;
+#elseif($op.returnType == "long")
+        return 0L;
+#elseif($op.returnType == "float")
+        return (float)0;
+#elseif($op.returnType == "double")
+        return (double)0;
+#elseif($op.returnType == "char")
+        return (char)0;
+#elseif($op.returnType == "boolean")
+        return false;
+#elseif($op.returnType != "void")
+        return null;
+#end
+    }
+#end
+}

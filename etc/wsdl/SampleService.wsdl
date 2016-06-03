@@ -1,0 +1,115 @@
+<?xml version="1.0" ?><wsdl:definitions name="SampleService" targetNamespace="http://service.esb.sample.rough_diamond.jp/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://service.esb.sample.rough_diamond.jp/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://service.esb.sample.rough_diamond.jp/" xmlns:tns="http://service.esb.sample.rough_diamond.jp/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="sayHello2" type="tns:sayHello2"></xsd:element>
+    <xsd:complexType name="sayHello2">
+        <xsd:sequence></xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="sayHello2Response" type="tns:sayHello2Response"></xsd:element>
+    <xsd:complexType name="sayHello2Response">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="return" type="xsd:string"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="sayHello3" type="tns:sayHello3"></xsd:element>
+    <xsd:complexType name="sayHello3">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="arg0" type="xsd:string"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="sayHello3Response" type="tns:sayHello3Response"></xsd:element>
+    <xsd:complexType name="sayHello3Response">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="return" type="xsd:string"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="sayHello" type="tns:sayHello"></xsd:element>
+    <xsd:complexType name="sayHello">
+        <xsd:sequence></xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="sayHelloResponse" type="tns:sayHelloResponse"></xsd:element>
+    <xsd:complexType name="sayHelloResponse">
+        <xsd:sequence></xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="sayHello2">
+    <wsdl:part element="tns:sayHello2" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sayHello3">
+    <wsdl:part element="tns:sayHello3" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sayHello2Response">
+    <wsdl:part element="tns:sayHello2Response" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sayHelloResponse">
+    <wsdl:part element="tns:sayHelloResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sayHello">
+    <wsdl:part element="tns:sayHello" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sayHello3Response">
+    <wsdl:part element="tns:sayHello3Response" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="SampleServicePortType">
+    <wsdl:operation name="sayHello2">
+      <wsdl:input message="tns:sayHello2" name="sayHello2">
+    </wsdl:input>
+      <wsdl:output message="tns:sayHello2Response" name="sayHello2Response">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sayHello3">
+      <wsdl:input message="tns:sayHello3" name="sayHello3">
+    </wsdl:input>
+      <wsdl:output message="tns:sayHello3Response" name="sayHello3Response">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sayHello">
+      <wsdl:input message="tns:sayHello" name="sayHello">
+    </wsdl:input>
+      <wsdl:output message="tns:sayHelloResponse" name="sayHelloResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SampleServiceSoapBinding" type="tns:SampleServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"></soap:binding>
+    <wsdl:operation name="sayHello2">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="sayHello2">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="sayHello2Response">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sayHello3">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="sayHello3">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="sayHello3Response">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sayHello">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="sayHello">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="sayHelloResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SampleService">
+    <wsdl:port binding="tns:SampleServiceSoapBinding" name="SampleServicePort">
+      <soap:address location="http://localhost:20080/services/SampleService"></soap:address>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

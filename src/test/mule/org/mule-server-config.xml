@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><mule xmlns="http://www.mulesource.org/schema/mule/core/2.1" xmlns:context="http://www.springframework.org/schema/context" xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.1" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="                  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd                  http://www.mulesource.org/schema/mule/cxf/2.1 http://www.mulesource.org/schema/mule/cxf/2.1/mule-cxf.xsd                  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd                  http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd                  http://www.mulesource.org/schema/mule/vm/2.1 http://www.mulesource.org/schema/mule/vm/2.1/mule-vm.xsd                  http://www.mulesource.org/schema/mule/servlet/2.1 http://www.mulesource.org/schema/mule/servlet/2.1/mule-servlet.xsd">
+
+  <context:property-placeholder location="cxfrouting.properties"/>
+
+  <model name="ConnectionTestVoidServiceModel">
+    <service name="ConnectionTestVoidService">
+      <inbound>
+        <cxf:inbound-endpoint address="http://${local.host}:${local.port}/services/ConnectionTestVoidService" mtomEnabled="true" serviceClass="jp.co.astom.sample.edi.service.ConnectionTestVoidService"/>
+      </inbound>
+      <component class="jp.co.astom.sample.edi.service.logic.ConnectionTestVoidServiceLogic"/>
+    </service>
+  </model>
+
+  <model name="ConnectionTestReturnServiceModel">
+    <service name="ConnectionTestReturnService">
+      <inbound>
+        <cxf:inbound-endpoint address="http://${local.host}:${local.port}/services/ConnectionTestReturnService" mtomEnabled="true" serviceClass="jp.co.astom.sample.edi.service.ConnectionTestReturnService"/>
+      </inbound>
+      <component class="jp.co.astom.sample.edi.service.logic.ConnectionTestReturnServiceLogic"/>
+    </service>
+  </model>
+
+  <model name="ContentInformationRequestServiceModel">
+    <service name="ContentInformationRequestService">
+      <inbound>
+        <cxf:inbound-endpoint address="http://${local.host}:${local.port}/services/ContentInformationRequestService" mtomEnabled="true" serviceClass="jp.co.astom.kaede.asp.service.communication.ContentInformationRequestService"/>
+      </inbound>
+      <component class="jp.co.astom.kaede.asp.service.communication.ContentInformationRequestServiceLogic"/>
+    </service>
+  </model>
+
+  <model name="DateSampleServiceModel">
+    <service name="DateSampleService">
+      <inbound>
+        <cxf:inbound-endpoint address="http://${local.host}:${local.port}/services/DateSampleService" mtomEnabled="true" serviceClass="jp.co.astom.sample.edi.service.DateSampleService"/>
+      </inbound>
+      <component class="jp.co.astom.sample.edi.service.DateSampleServiceLogic"/>
+    </service>
+  </model>
+</mule>

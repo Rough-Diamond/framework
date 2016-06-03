@@ -1,0 +1,1027 @@
+<?xml version="1.0" encoding="Windows-31J"?>
+
+<project name="common-project" basedir="." default="makeBean" xmlns:jacoco="antlib:org.jacoco.ant">
+  <dirname property="my.build.dir" file="${ant.file}" />
+
+  <!-- フレームワークディレクトリ関連 -->
+  <property name="framework.vendor"                 value="Rough Diamond Co.,Ltd" />
+  <property name="framework.root"                   value="${my.build.dir}/../framework" />
+  <property name="framework.work.classes.dir"       value="${framework.root}/work/classes" />
+  <property name="framework.src.dir"                value="${framework.root}/src/java" />
+  <property name="framework.lib.root"               value="${framework.root}/libs" />
+  <property name="framework.java.version"           value="1.6" />
+  <property name="framework.compile.debug"          value="on" />
+  <property name="framework.src.encoding"           value="MS932" />
+  <property name="framework.ant.extention.version"  value="2.0.2" />
+  <property name="framework.dist.dir"               value="../framework/target"/>
+  <property name="framework.classes.dir"            value="${framework.dist.dir}/classes" />
+
+  <property name="release.dir"            value="${my.build.dir}/release" />
+  <property name="src.dir"                value="${my.build.dir}/src/java" />
+  <property name="web.root.dir"           value="${my.build.dir}/webapp" />
+  <property name="lib.dir"                value="${web.root.dir}/WEB-INF/lib" />
+  <property name="classes.dir"            value="${web.root.dir}/WEB-INF/classes" />
+  <property name="other.src.dir"          value="${my.build.dir}/src/other" />
+  <property name="other.lib.dir"          value="${my.build.dir}/etc/otherlib" />
+  <property name="conf.dir"               value="${my.build.dir}/conf" />
+  <property name="resource.dir"           value="${my.build.dir}/src/resource" />
+  <property name="schema.property.file"   value="schemaResources.properties" />
+  <property name="cache.property.file"    value="overrideCache.properties" />
+  <property name="src.encoding"           value="Windows-31J" />
+
+  <!-- データベース関連 -->
+  <property name="export.dir"             value="./etc/export" />
+  <property name="table.doc.dir"          value="${my.build.dir}/doc/table" />
+  <property name="torque.schema.dir"      value="${my.build.dir}/etc/schema" />
+  <property name="torque.sql.dir"         value="${my.build.dir}/etc/sql" />
+  <property name="sql.createtables"       value="${torque.sql.dir}/*-schema.sql" />
+  <property name="sql.addalter"           value="${torque.sql.dir}/*-schema-fk.sql" />
+  <property name="sql.dropalter"          value="${torque.sql.dir}/*-schema-dropfk.sql" />
+  <property name="sql.schema"             value="${torque.schema.dir}/*-schema.xml" />
+
+  <!-- テスト関連 -->
+  <property name="test.root.dir"          value="${my.build.dir}/test" />
+  <property name="test.work.dir"          value="${test.root.dir}/work" />
+  <property name="test.classes.dir"       value="${test.work.dir}/classes" />
+  <property name="test.src.dir"           value="${my.build.dir}/src/test" />
+  <property name="result.dir"             value="${test.root.dir}/result" />
+  <property name="report.dir"             value="testRreport" />
+  <property name="coverage.dir"           value="coverage" />
+  <property name="junit.src.pattern"      value="**/*Test.java" />
+
+  <property name="test.filed.flag"        value="${test.work.dir}/.testFailed" />
+  <property name="test.compiled.flag"     value="${test.work.dir}/.testCompiled" />
+  <property name="test.initialized.flag"  value="${test.work.dir}/.testInitialized" />
+  <property name="test.web.root"          value="${test.work.dir}/webresource" />
+
+  <!-- コンパイル周り -->
+  <property name="compile.debug" value="on"/>
+  <property name="compile.optimize" value="off"/>
+  <property name="compile.deprecation" value="off"/>
+  <property name="compile.java.version" value="1.6" />
+
+  <!-- ライブラリ取得先 -->
+  <property name="lib.publisher" value="http://www.ibiblio.org/maven" />
+
+  <!-- JavaDoc出力先 -->
+  <property name="javadoc.dir" value="${my.build.dir}/doc/api" />
+
+  <path id="real.src.path.default">
+    <pathelement location="${src.dir}" />
+  </path>
+
+  <path id="test.src.path.default">
+    <path refid="real.src.path.default"/>
+    <pathelement location="${test.src.dir}" />
+  </path>
+
+  <path id="test.files.path.default">
+    <fileset dir="${test.src.dir}">
+      <include name="${junit.src.pattern}" />
+    </fileset>
+  </path>
+
+  <path id="jacoco.classes.default">
+	<fileset dir="${test.classes.dir}_tmp">
+    </fileset>
+  </path>
+
+  <!-- servletAPIのバージョンで異なる -->
+  <path id="servletapi.path">
+    <fileset dir="${other.lib.dir}">
+      <include name="servlet-api.jar" />
+      <include name="jsp-api.jar" />
+    </fileset>
+  </path>
+
+  <path id="classpath.real">
+    <pathelement location="${classes.dir}" />
+    <fileset dir="${lib.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+    <path refid="servletapi.path"/>
+    <path refid="framework.path"/>
+  </path>
+
+  <path id="framework.path">
+    <pathelement location="${framework.work.classes.dir}" />
+    <fileset dir="${framework.lib.root}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+  <path id="classpath.all">
+    <path refid="classpath.real"/>
+    <fileset dir="${other.lib.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+    <path refid="framework.path" />
+  </path>
+
+  <path id="wsdl2java.path">
+    <pathelement location="${classes.dir}" />
+    <fileset dir="${other.lib.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+    <path refid="framework.path"/>
+  </path>
+
+  <target name="ant-extention-check">
+    <available file="${framework.lib.root}/common/rd-ant-ext-${framework.ant.extention.version}.jar" property="ant.ext.jar.present" />
+  </target>
+
+  <target name="ant-extention-make" unless="ant.ext.jar.present">
+    <delete>
+      <fileset dir="${framework.lib.root}/common/" includes="rd-ant-ext-*.jar" />
+    </delete>
+    <mkdir dir="${framework.work.classes.dir}" />
+    <delete dir="${framework.work.classes.dir}" />
+    <mkdir dir="${framework.work.classes.dir}" />
+    <javac
+        srcdir="${framework.src.dir}"
+        source="${framework.java.version}"
+        target="${framework.java.version}"
+        destdir="${framework.work.classes.dir}"
+        debug="${framework.compile.debug}"
+        encoding="${framework.src.encoding}"
+    >
+      <src path="${framework.src.dir}" />
+      <src path="${framework.src.dir}/../testingFramework" />
+      <include name="jp/rough_diamond/ant/**/*.java" />
+      <include name="jp/rough_diamond/tools/**/*.java" />
+      <include name="org/dbunit/**/*.java" />
+      <classpath>
+        <fileset dir="${framework.lib.root}">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+    </javac>
+    <copy todir="${framework.work.classes.dir}">
+      <fileset dir="${framework.src.dir}">
+        <exclude name="**/.svn" />
+        <exclude name="**/*.java" />
+        <include name="jp/rough_diamond/ant/**/*" />
+        <include name="jp/rough_diamond/tools/**/*" />
+        <include name="org/dbunit/**/*" />
+      </fileset>
+    </copy>
+    <jar destfile="${framework.lib.root}/common/rd-ant-ext-${framework.ant.extention.version}.jar" 
+        basedir="${framework.work.classes.dir}">
+      <manifest>
+        <attribute name="Implementation-Vendor"   value="${framework.vendor}"/>
+        <attribute name="Implementation-Title"    value="Rough Diamond Framework Ant Tasks"/>
+        <attribute name="Implementation-Version"  value="${framework.ant.extention.version}"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="get-deps" unless="noget" description="必要なライブラリを取得する">
+    <mkdir dir="${framework.lib.root}/cglib" />
+    <get dest="${framework.lib.root}/cglib/cglib-2.1.3.jar" usetimestamp="true" ignoreerrors="true" src="https://github.com/Rough-Diamond/repos/raw/master/patches/cglib/cglib-2.1.3_p01.jar" />
+    <mkdir dir="${framework.lib.root}/dbUnit" />
+    <get dest="${framework.lib.root}/dbUnit/dbunit.jar" usetimestamp="true" ignoreerrors="true" src="https://github.com/Rough-Diamond/repos/raw/master/patches/dbunit/dbunit-2.1_p05.jar" />
+    <mkdir dir="${framework.lib.root}/servletapi" />
+<!--
+    <get dest="${framework.lib.root}/servletapi/servlet-api.jar" usetimestamp="true" ignoreerrors="true" src="http://mirrors.ibiblio.org/pub/mirrors/maven2/org/apache/tomcat/servlet-api/6.0.18/servlet-api-6.0.18.jar" />
+    <get dest="${framework.lib.root}/servletapi/jsp-api.jar" usetimestamp="true" ignoreerrors="true" src="http://mirrors.ibiblio.org/pub/mirrors/maven2/org/apache/tomcat/jsp-api/6.0.18/jsp-api-6.0.18.jar" />
+    <get dest="${framework.lib.root}/servletapi/tomcat-6.0.18.zip" usetimestamp="true" ignoreerrors="true" src="http://www.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-6/v6.0.18/bin/apache-tomcat-6.0.18.zip" />
+    <unzip src="${framework.lib.root}/servletapi/tomcat-6.0.18.zip" dest="${framework.lib.root}/servletapi">
+      <patternset>
+          <include name="apache-tomcat-6.0.18/lib/servlet-api.jar"/>
+          <include name="apache-tomcat-6.0.18/lib/jsp-api.jar"/>
+      </patternset>
+      <mapper type="flatten"/>
+    </unzip>
+-->
+    <get dest="${framework.lib.root}/xdoclet/xdoclet-hibernate-module.jar" usetimestamp="true" ignoreerrors="true" src="http://dev.rough-diamond.jp/svn/framework/patches/xdoclet-hibernate-module/tags/1.2.3_p04/xdoclet-hibernate-module/xdoclet-hibernate-module-1.2.3_p04.jar" />
+    <get dest="${framework.lib.root}/xdoclet/xdoclet.jar" usetimestamp="true" ignoreerrors="true" src="http://dev.rough-diamond.jp/svn/framework/patches/xdoclet/tags/1.2.3_p01/xdoclet/xdoclet-1.2.3_p01.jar" />
+    <property name="noget" value="xxx" />
+  </target>
+
+
+  <target name="init-task" depends="get-deps, ant-extention-check, ant-extention-make">
+    <taskdef name="propertyChecker" classpathref="framework.path"
+              classname="jp.rough_diamond.ant.taskdefs.PropertyCheckerTask" />
+    <taskdef name="hibernatedoclet" classpathref="framework.path"
+              classname="jp.rough_diamond.ant.taskdefs.HibernateDocletTaskExt" />
+    <taskdef name="dbunit" classpathref="classpath.all"
+                      classname="org.dbunit.ant.DbUnitTask" />
+    <taskdef name="beanGen" classpathref="framework.path"
+                                          classname="jp.rough_diamond.ant.taskdefs.BeanGenerator" />
+    <taskdef name="getWSDL" classpathref="framework.path"
+        classname="jp.rough_diamond.ant.taskdefs.GetAndMakeWSDLTask" />
+    <taskdef name="wsdl2java" classpathref="framework.path"
+        classname="jp.rough_diamond.ant.taskdefs.WSDL2JavaExt" />
+    <taskdef name="makeCXFService" classpathref="framework.path"
+        classname="jp.rough_diamond.ant.taskdefs.ServiceGeneratorTask" />
+  </target>
+
+  <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" >
+    <classpath refid="framework.path"/>
+  </taskdef>
+
+  <target name="clearTestData" depends="init-task" description="テストデータをクリアする">
+    <java classname="jp.rough_diamond.tools.TestDataEraser" classpathref="classpath.all" fork="yes">
+    </java>
+  </target>
+
+  <target name="makeBean" depends="init-task" description="JavaBeansを作成する">
+    <condition property="bean.def.xml" value="beanDef/beanDef.xml" >
+      <not>
+        <isset property="bean.def.xml" />
+      </not>
+    </condition>
+    <condition property="src.encoding" value="MS932" >
+      <not>
+        <isset property="src.encoding" />
+      </not>
+    </condition>
+    <beanGen root="${src.dir}" input="${bean.def.xml}" encoding="${src.encoding}" />
+    <echo message="Eclipse上で実行している場合は、F5を押して最新状態にしてください。" />
+  </target>
+
+  <target name="copyTorque-gen" description="Torque-Genのパッチを当てたものを当該プロジェクトへコピーする">
+    <ant antfile="../torque-gen-patch/build.xml" target="copyTorque-gen" />
+  </target>
+
+  <target name="makeClientStub" depends="init-task" description="WSDLをサーバから取得しスタブモジュールを作成する">
+    <antcall target="getWSDL" />
+    <antcall target="wsdl2java" />
+  </target>
+
+  <target name="filter-check" unless="filtering.filename" >
+    <property name="tmpName" value="${user.name}" />
+    <property name="confDir" value="${conf.dir}" />
+    <echo message="${tmpName}" />
+    <script language="javascript">
+        <![CDATA[
+          project.setProperty("filtering.filename", confDir + "/filtering." + tmpName.replace("-", "_") + ".properties");
+        ]]>
+    </script>
+  </target>
+
+  <target name="filter-exists" if="filtering.filename" >
+    <echo message="loading Environment InjecttionFile:[${filtering.filename}]" />
+    <available file="${filtering.filename}" property="filtering.filename.present" />
+    <antcall target="filter-nonexists-msg" />
+  </target>
+
+  <target name="filter-nonexists-msg" unless="filtering.filename.present" >
+    <echo message="${filtering.filename}が存在しません。" />
+  </target>
+
+  <target name="getWSDL" >
+    <condition property="wsdl.dir" value="${my.build.dir}/etc/wsdl" >
+      <not>
+        <isset property="wsdl.dir" />
+      </not>
+    </condition>
+    <condition property="di.container.type" value="jp.rough_diamond.commons.di.SpringFramework" >
+      <not>
+        <isset property="di.container.type" />
+      </not>
+    </condition>
+    <condition property="di.config.path" value="beans.xml" >
+      <not>
+        <isset property="di.config.path" />
+      </not>
+    </condition>
+    <getWSDL wsdlStorageDir="${wsdl.dir}" classPathRef="classpath.all" 
+        diContainerType="${di.container.type}" diConfig="${di.config.path}" />
+  </target>
+
+  <target name="wsdl2java">
+    <condition property="wsdl.dir" value="${my.build.dir}/etc/wsdl" >
+      <not>
+        <isset property="wsdl.dir" />
+      </not>
+    </condition>
+    <condition property="cxf.dest.dir" value="${my.build.dir}/src/java" >
+      <not>
+        <isset property="cxf.dest.dir" />
+      </not>
+    </condition>
+    <condition property="cxf.stub.package" value="cxf.stub" >
+      <not>
+        <isset property="cxf.stub.package" />
+      </not>
+    </condition>
+    <condition property="cxf.mule.client.config" value="${my.build.dir}/src/java/mule/edi-client-config.xml" >
+      <not>
+        <isset property="cxf.mule.client.config" />
+      </not>
+    </condition>
+    <condition property="server.endpoint.prefix" value="gateway" >
+      <not>
+        <isset property="server.endpoint.prefix" />
+      </not>
+    </condition>
+    <condition property="mule.version" value="2.1" >
+      <not>
+        <isset property="mule.version" />
+      </not>
+    </condition>
+    <wsdl2java
+      wsdldir="${wsdl.dir}"
+      srcdir="${cxf.dest.dir}" 
+      rootPackage="${cxf.stub.package}" 
+      muleConfigFile="${cxf.mule.client.config}"
+      serverEndpointPrefix="${server.endpoint.prefix}" 
+      classPathRef="wsdl2java.path" 
+      version="${mule.version}" />
+  </target>
+
+  <target name="makeCXFService" depends="init-task" description="サービスの定義に基づいてサーバ側で必要なリソースを作成する">
+    <condition property="cxf.service.file" value="${my.build.dir}/etc/serviceDef/services.xml" >
+      <not>
+        <isset property="cxf.service.file" />
+      </not>
+    </condition>
+    <condition property="cxf.dest.dir" value="${my.build.dir}/src/java" >
+      <not>
+        <isset property="cxf.dest.dir" />
+      </not>
+    </condition>
+    <condition property="cxf.mule.server.config" value="${my.build.dir}/src/java/mule/edi-server-config.xml" >
+      <not>
+        <isset property="cxf.mule.server.config" />
+      </not>
+    </condition>
+    <condition property="localhost.endpoint.prefix" value="local" >
+      <not>
+        <isset property="localhost.endpoint.prefix" />
+      </not>
+    </condition>
+    <condition property="mule.version" value="2.1" >
+      <not>
+        <isset property="mule.version" />
+      </not>
+    </condition>
+    <makeCXFService
+      input="${cxf.service.file}"
+      srcdir="${cxf.dest.dir}"
+      muleConfigFile="${cxf.mule.server.config}" 
+      localhostEndpointPrefix="${localhost.endpoint.prefix}"
+      version="${mule.version}" />
+  </target>
+
+  <target name="execAnt">
+    <echo message="${ant.home}" />
+    <echo message="${basedir}" />
+    <condition property="param1" value="">
+      <not>
+        <isset property="param1" />
+      </not>
+    </condition>
+    <condition property="param2" value="">
+      <not>
+        <isset property="param2" />
+      </not>
+    </condition>
+    <condition property="param3" value="">
+      <not>
+        <isset property="param3" />
+      </not>
+    </condition>
+    <condition property="param4" value="">
+      <not>
+        <isset property="param4" />
+      </not>
+    </condition>
+    <condition property="param5" value="">
+      <not>
+        <isset property="param5" />
+      </not>
+    </condition>
+    <exec executable="${java.home}/bin/java" failonerror="true">
+      <arg value="-classpath" />
+      <arg value="${java.class.path}" />
+      <arg value="org.apache.tools.ant.launch.Launcher" />
+      <arg value="${param1}" />
+      <arg value="${param2}" />
+      <arg value="${param3}" />
+      <arg value="${param4}" />
+      <arg value="${param5}" />
+      <arg value="-f" />
+      <arg value="${build.file}" />
+      <arg value="${exec.target}" />
+    </exec>
+  </target>
+
+  <target name="makeSchemaAccessor" description="テーブルレイアウト、create table文、Javaソース、マッピングファイル、hibernateConfigを作成する">
+    <condition property="torque.template.path" value="${my.build.dir}/torque-gen/templates">
+      <not>
+        <isset property="torque.template.path" />
+      </not>
+    </condition>
+    <condition property="torque.threadCount" value="0">
+      <not>
+        <isset property="torque.threadCount" />
+      </not>
+    </condition>
+    <filter token="src.dir"                     value="${src.dir}" />
+    <filter token="table.doc.dir"               value="${table.doc.dir}" />
+    <filter token="torque.schema.property.dir"  value="${resource.dir}" />
+    <filter token="torque.schema.property.file" value="${schema.property.file}" />
+    <filter token="torque.cache.property.dir"   value="${my.build.dir}" />
+    <filter token="torque.cache.property.file"  value="${cache.property.file}" />
+    <filter token="torque.schema.dir"           value="${torque.schema.dir}" />
+    <filter token="torque.sql.dir"              value="${torque.sql.dir}" />
+    <filter token="torque.template.path"        value="${torque.template.path}" />
+    <filter filtersfile="${my.build.dir}/middlegen.properties" />
+
+    <copy file="${framework.root}/build-torque.properties" tofile="${torque.schema.dir}/build.properties" filtering="true" overwrite="true" />
+    <replace file="${torque.schema.dir}/build.properties" token="\" value="/" />
+    <tstamp><format property="start" pattern="yyyyMMddHHmmssSSS"/></tstamp>
+    <parallel failonany="true" threadCount="${torque.threadCount}" >
+      <antcall target="execAnt">
+        <param name="build.file"  value="${framework.root}/torque-gen/build-torque.xml" />
+        <param name="exec.target" value="sql" />
+        <param name="param1"      value="-Dtorque.build.properties=${torque.schema.dir}/build.properties" />
+      </antcall>
+      <antcall target="execAnt">
+        <param name="build.file"  value="${framework.root}/torque-gen/build-torque.xml" />
+        <param name="exec.target" value="doc" />
+        <param name="param1"      value="-Dtorque.build.properties=${torque.schema.dir}/build.properties" />
+      </antcall>
+      <antcall target="execAnt">
+        <param name="build.file"  value="${framework.root}/torque-gen/build-torque.xml" />
+        <param name="exec.target" value="hibernate-java" />
+        <param name="param1"      value="-Dtorque.build.properties=${torque.schema.dir}/build.properties" />
+      </antcall>
+      <antcall target="execAnt">
+        <param name="build.file"  value="${framework.root}/torque-gen/build-torque.xml" />
+        <param name="exec.target" value="schema-properties" />
+        <param name="param1"      value="-Dtorque.build.properties=${torque.schema.dir}/build.properties" />
+      </antcall>
+      <antcall target="execAnt">
+        <param name="build.file"  value="${framework.root}/torque-gen/build-torque.xml" />
+        <param name="exec.target" value="cache-override-properties" />
+        <param name="param1"      value="-Dtorque.build.properties=${torque.schema.dir}/build.properties" />
+      </antcall>
+    </parallel>
+    <parallel failonany="true" threadCount="${torque.threadCount}" >
+      <antcall target="execAnt">
+        <param name="build.file"  value="${basedir}/build.xml" />
+        <param name="exec.target" value="hibernatedoclet" />
+      </antcall>
+      <native2ascii src="${resource.dir}" dest="${src.dir}" includes="**/*.properties" encoding="${src.encoding}" />
+    </parallel>
+    <echo message="Eclipse上で実行している場合は、F5を押して最新状態にしてください。" />
+    <tstamp><format property="finish" pattern="yyyyMMddHHmmssSSS"/></tstamp>
+    <echo message="${finish}" />
+    <echo message="${start}" />
+  </target>
+
+  <target name="makeMultipleSQL">
+    <filter token="torque.schema.dir"           value="${torque.schema.dir}" />
+    <filter token="torque.sql.dir"              value="${torque.sql.dir}/oracle" />
+    <filter token="torque.database.type"        value="oracle" />
+    <copy file="${framework.root}/build-torque.properties" tofile="${torque.schema.dir}/build.properties" filtering="true" overwrite="true" />
+    <replace file="${torque.schema.dir}/build.properties" token="\" value="/" />
+    <echo message="Create Table文を作成します。" />
+    <antcall target="execAnt">
+      <param name="build.file"  value="${framework.root}/torque-gen/build-torque.xml" />
+      <param name="exec.target" value="sql" />
+      <param name="param1"      value="-Dtorque.build.properties=${torque.schema.dir}/build.properties" />
+    </antcall>
+    <filter token="torque.schema.dir"           value="${torque.schema.dir}" />
+    <filter token="torque.sql.dir"              value="${torque.sql.dir}/postgresql" />
+    <filter token="torque.database.type"        value="postgresql" />
+    <copy file="${framework.root}/build-torque.properties" tofile="${torque.schema.dir}/build.properties" filtering="true" overwrite="true" />
+    <replace file="${torque.schema.dir}/build.properties" token="\" value="/" />
+    <echo message="Create Table文を作成します。" />
+    <antcall target="execAnt">
+      <param name="build.file"  value="${framework.root}/torque-gen/build-torque.xml" />
+      <param name="exec.target" value="sql" />
+      <param name="param1"      value="-Dtorque.build.properties=${torque.schema.dir}/build.properties" />
+    </antcall>
+    <filter token="torque.schema.dir"           value="${torque.schema.dir}" />
+    <filter token="torque.sql.dir"              value="${torque.sql.dir}/mysql" />
+    <filter token="torque.database.type"        value="mysql" />
+    <copy file="${framework.root}/build-torque.properties" tofile="${torque.schema.dir}/build.properties" filtering="true" overwrite="true" />
+    <replace file="${torque.schema.dir}/build.properties" token="\" value="/" />
+    <echo message="Create Table文を作成します。" />
+    <antcall target="execAnt">
+      <param name="build.file"  value="${framework.root}/torque-gen/build-torque.xml" />
+      <param name="exec.target" value="sql" />
+      <param name="param1"      value="-Dtorque.build.properties=${torque.schema.dir}/build.properties" />
+    </antcall>
+  </target>
+
+  <!-- JavaのソースコードからHibernateのマッピングファイルを作成する -->
+  <target name="hibernatedoclet" depends="init-task">
+    <property file="./middlegen.properties" />
+    <condition property="torque.threadCount" value="0">
+      <not>
+        <isset property="torque.threadCount" />
+      </not>
+    </condition>
+    <condition property="hibernate.otherResources" value="" >
+      <not>
+        <isset property="hibernate.otherResources" />
+      </not>
+    </condition>
+    <condition property="hibernate.fileset.dirs" value="${src.dir}" >
+      <not>
+        <isset property="hibernate.fileset.dirs" />
+      </not>
+    </condition>
+    <condition property="hibernate.pattern" value="**/entity/**/*.java" >
+      <not>
+        <isset property="hibernate.pattern" />
+      </not>
+    </condition>
+    <condition property="hibernate.max_fetch_depth" value="2" >
+      <not>
+        <isset property="hibernate.max_fetch_depth" />
+      </not>
+    </condition>
+    <condition property="hibernate.max_fetch_depth" value="2" >
+      <not>
+        <isset property="hibernate.max_fetch_depth" />
+      </not>
+    </condition>
+    <condition property="hibernate.useOuterJoin" value="true" >
+      <and>
+        <not>
+          <isset property="hibernate.useOuterJoin" />
+        </not>
+        <not>
+          <equals arg1="${hibernate.max_fetch_depth}" arg2="0" />
+        </not>
+      </and>
+    </condition>
+    <condition property="hibernate.useOuterJoin" value="false" >
+      <and>
+        <not>
+          <isset property="hibernate.useOuterJoin" />
+        </not>
+        <equals arg1="${hibernate.max_fetch_depth}" arg2="0" />
+      </and>
+    </condition>
+    <condition property="hibernate.cacheProviderClass" value="org.hibernate.cache.EhCacheProvider" >
+      <not>
+        <isset property="hibernate.cacheProviderClass" />
+      </not>
+    </condition>
+    <condition property="hibernate.cache.avalable" value="false" >
+      <not>
+        <isset property="hibernate.cache.avalable" />
+      </not>
+    </condition>
+    <echo message="${hibernate.otherResources}" />
+    <hibernatedoclet destdir="${src.dir}"
+      excludedtags="@version, @author, @todo"
+      force="true"
+      mergedir="${classes.dir}"
+      verbose="false"
+      fileSetDirs="${hibernate.fileset.dirs}"
+      encoding="${src.encoding}"
+      >
+      <configParam name="cache.avalable" value="${hibernate.cache.avalable}" />
+      <configParam name="threadCount" value="${torque.threadCount}" />
+      <hibernate version="3.0"
+        overrideCacheInfoFile="${my.build.dir}/${cache.property.file}"
+      />
+      <hibernatecfg 
+          dialect="${hibernate.dialect}"
+          jdbcUrl="${hibernate.connection.url}"
+          driver="${hibernate.connection.driver_class}"
+          userName="${hibernate.connection.username}"
+          password="${hibernate.connection.password}"
+          showSql="${hibernate.show_sql}"
+          useOuterjoin="${hibernate.useOuterJoin}"
+          destDir="${src.dir}"
+          version="3.0"
+          cacheProviderClass="${hibernate.cacheProviderClass}"
+          destinationFile="hibernate.cfg.xml"
+          otherResources="${hibernate.otherResources}"
+      >
+        <otherProperty name="max_fetch_depth"                 value="${hibernate.max_fetch_depth}" />
+        <otherProperty name="hibernate.cache.use_query_cache" value="true" />
+        <otherProperty name="connection.provider_class"       value="${hibernate.connection.provider_class}" />
+        <otherProperty name="connection.pool_size"            value="${hibernate.connection.pool_size}" />
+        <otherProperty name="hibernate.c3p0.min_size"         value="${hibernate.connection.c3p0.min_size}" />
+        <otherProperty name="hibernate.c3p0.max_size"         value="${hibernate.connection.c3p0.max_size}" />
+        <otherProperty name="hibernate.c3p0.timeout"          value="${hibernate.connection.c3p0.timeout}" />
+        <otherProperty name="hibernate.c3p0.max_statements"   value="${hibernate.connection.c3p0.max_statements}" />
+        <otherProperty name="hibernate.c3p0.idle_test_period" value="3" />
+        <otherProperty name="hibernate.c3p0.validate" 		  value="true" />
+        <otherProperty name="default_schema"                  value="${hibernate.default_schema}" />
+      </hibernatecfg>
+    </hibernatedoclet>
+  </target>
+
+  <target name="DB-init" depends="init-task" description="自動生成されたCreate Table文を実行する">
+    <antcall target="DB-clear-1" />
+    <antcall target="DB-clear-2" />
+  </target>
+
+  <target name="DB-clear-1" depends="init-task">
+    <property file="./middlegen.properties" />
+    <condition property="src.encoding" value="Shift_JIS" >
+      <not>
+        <isset property="src.encoding" />
+      </not>
+    </condition>
+    <condition property="sql.encoding" value="${src.encoding}" >
+      <not>
+        <isset property="sql.encoding" />
+      </not>
+    </condition>
+    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" 
+            userid="${hibernate.connection.username}" password="${hibernate.connection.password}"
+            schema="${hibernate.schema}">
+      <query file="${torque.sql.dir}/preinit.sql" encoding="${sql.encoding}" />
+      <query file="${torque.sql.dir}/preinit.${torque.database.type}.sql" encoding="${sql.encoding}" />
+      <query file="${sql.dropalter}"    encoding="${sql.encoding}" />
+      <query file="${sql.createtables}" encoding="${sql.encoding}" />
+    </dbunit>
+  </target>
+
+  <target name="DB-clear-2" depends="init-task">
+    <property file="./middlegen.properties" />
+    <condition property="src.encoding" value="Shift_JIS" >
+      <not>
+        <isset property="src.encoding" />
+      </not>
+    </condition>
+    <condition property="sql.encoding" value="${src.encoding}" >
+      <not>
+        <isset property="sql.encoding" />
+      </not>
+    </condition>
+    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" 
+            userid="${hibernate.connection.username}" password="${hibernate.connection.password}"
+            schema="${hibernate.schema}">
+      <query file="${sql.addalter}" encoding="${sql.encoding}" />
+      <query file="${torque.sql.dir}/postinit.sql" encoding="${sql.encoding}" />
+      <query file="${torque.sql.dir}/postinit.${torque.database.type}.sql" encoding="${sql.encoding}" />
+    </dbunit>
+  </target>
+
+  <target name="DB-export" depends="init-task" description="DBをエクスポートする">
+    <mkdir dir="${export.dir}" />
+    <property file="./middlegen.properties" />
+    <echo message="${sql.schema}" />
+    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" 
+            userid="${hibernate.connection.username}" password="${hibernate.connection.password}"
+            schema="${hibernate.default_schema}">
+      <export4TorqueSchema dest="${export.dir}/{0}.xml" format="xml" schema="${sql.schema}" />
+    </dbunit>
+  </target>
+
+  <target name="DB-export-excel" depends="init-task" description="DBをExcelへエクスポートする">
+    <mkdir dir="${export.dir}" />
+    <property file="./middlegen.properties" />
+    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" 
+            userid="${hibernate.connection.username}" password="${hibernate.connection.password}"
+            schema="${hibernate.default_schema}">
+      <export4TorqueSchema dest="${export.dir}/{0}.xls" format="excel" schema="${sql.schema}" />
+    </dbunit>
+  </target>
+
+  <target name="DB-recover" depends="init-task" description="エクスポートしたデータをインポートする">
+    <antcall target="DB-clear-1" />
+    <property file="./middlegen.properties" />
+    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" 
+            userid="${hibernate.connection.username}" password="${hibernate.connection.password}"
+            schema="${hibernate.default_schema}">
+      <operation type="INSERT" src="${export.dir}/*.xml" format="xml"/>
+    </dbunit>
+    <antcall target="DB-clear-2" />
+  </target>
+
+  <target name="doContinuousIntegration" depends="init-task" description="継続的インテグレーションを行う">
+    <property name="filtering.filename" value="${conf.dir}/filtering.ci.properties" />
+    <antcall target="ci-preprocess" />
+    <antcall target="makeCIConfig" />
+    <antcall target="ci-preprocess-db" />
+    <antcall target="test" />
+    <antcall target="ci-postprocess" />
+  </target>
+
+  <target name="ci-preprocess-db" unless="do.not.use.makeSchemaAccessor">
+    <antcall target="makeSchemaAccessor" />
+    <antcall target="DB-init" />
+  </target>
+
+  <target name="ci-preprocess" if="ci.preprocess.name">
+    <antcall target="${ci.preprocess.name}" />
+  </target>
+
+  <target name="ci-postprocess" if="ci.postprocess.name">
+    <antcall target="${ci.postprocess.name}" />
+  </target>
+
+  <target name="makeCIConfig" unless="ci.skip.ei">
+    <antcall target="makeConfig" />
+  </target>
+
+  <target name="test.prepare">
+    <mkdir dir="${test.work.dir}" />
+    <mkdir dir="${test.classes.dir}" />
+    <delete>
+      <fileset dir="${test.classes.dir}" includes="**/*" />
+    </delete>
+    <mkdir dir="${result.dir}" />
+    <delete>
+      <fileset dir="${result.dir}" includes="**/*" />
+    </delete>
+    <condition property="test.src.path.name" value="test.src.path.default">
+      <not>
+        <isreference refid="test.src.path" />
+      </not>
+    </condition>
+    <condition property="test.src.path.name" value="test.src.path">
+      <isreference refid="test.src.path" />
+    </condition>
+  </target>
+  
+  <target name="test.compile" depends="test.prepare">
+    <echo message="${test.src.path.name}" />
+    <echo message="${lib.dir}" />
+    <antcall target="do.compile">
+      <param name="compile.src.roots"     value="${test.src.path.name}" />
+      <param name="compile.classpath"     value="classpath.all" />
+      <param name="compile.dest.dir"      value="${test.classes.dir}" />
+      <param name="copy.resource.target"  value="copyAllResources" />
+    </antcall>
+  </target>
+
+  <target name="do.compile" depends="initAspectJTask">
+    <echo message="${compile.java.version}" />
+    <javac
+        destDir="${compile.dest.dir}"
+        deprecation="yes"
+        debug="true"
+        source="${compile.java.version}"
+        target="${compile.java.version}"
+        encoding="${src.encoding}"
+    >
+      <src>
+        <path refid="${compile.src.roots}"/>
+      </src>
+      <classpath>
+        <path refid="${compile.classpath}"/>
+      </classpath>
+    </javac>
+    <antcall target="${copy.resource.target}">
+      <param name="resource.dest.dir" value="${compile.dest.dir}" />
+    </antcall>
+  </target>
+
+  <target name="doIt">
+    <condition property="parameter" value="" >
+      <not>
+        <isset property="parameter" />
+      </not>
+    </condition>
+    <condition property="vmarg" value="" >
+      <not>
+        <isset property="vmarg" />
+      </not>
+    </condition>
+    <echo message="${parameter}" />
+    <java classname="${target}" fork="yes">
+      <arg line="${parameter}" />
+      <jvmarg value="${vmarg}" />
+      <classpath>
+        <pathelement location="${classes.dir}" />
+        <fileset dir="${lib.dir}">
+          <include name="**/*.jar" />
+        </fileset>
+        <fileset dir="${other.lib.dir}">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="test" description="JUnit+JaCoCoでテストを実行する" depends="test.prepare, test.compile">
+    <antcall target="doJUnit" />
+  </target>
+
+  <target name="doJUnit">
+    <taskdef name="junit" classpathref="classpath.all"
+                      classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" />
+    <condition property="test.files.path.name" value="test.files.path.default" >
+      <not>
+        <isreference refid="test.files.path" />
+      </not>
+    </condition>
+    <condition property="test.files.path.name" value="test.files.path" >
+      <isreference refid="test.files.path" />
+    </condition>
+    <delete file="${test.root.dir}/jacoco.exec" />
+    <condition property="jacoco.includes" value="*" >
+      <not>
+        <isset property="jacoco.includes" />
+      </not>
+    </condition>
+    <condition property="jacoco.excludes" value="" >
+      <not>
+        <isset property="jacoco.excludes" />
+      </not>
+    </condition>
+  	<jacoco:coverage destfile="${test.root.dir}/jacoco.exec"
+  		includes="${jacoco.includes}" excludes="${jacoco.excludes}">
+  	  <junit printsummary="yes" haltonfailure="no" 
+          fork="yes" forkmode="once" showOutput="true" failureproperty="tests.failed" maxmemory="1024m">
+        <jvmarg value="-XX:-UseSplitVerifier" />
+        <classpath>
+          <pathelement location="${test.classes.dir}"/>
+          <path refid="classpath.all"/>
+        </classpath>
+        <formatter type="xml" />
+        <batchtest fork="yes" todir="${result.dir}"
+                      failureproperty="tests.failed">
+          <path refid="${test.files.path.name}"/>
+        </batchtest>
+      </junit>
+    </jacoco:coverage>
+  	<antcall target="report" />
+  </target>
+	
+  <target name="report">
+    <tstamp>
+      <format property="ts" pattern="yyyyMMdd-HHmmss" />
+    </tstamp>
+    <mkdir dir="${test.root.dir}/${ts}/${report.dir}" />
+    <mkdir dir="${test.root.dir}/${ts}/${coverage.dir}" />
+    <mkdir dir="${test.root.dir}/${ts}/${coverage.dir}/xml" />
+    <junitreport todir="${test.root.dir}/${ts}/${report.dir}">
+      <fileset dir="${result.dir}"
+          includes="TEST-*.xml"/>
+      <report todir="${test.root.dir}/${ts}/${report.dir}" format="frames" /> 
+    </junitreport>
+	<!-- Step 3: Create coverage report -->
+  	<!-- テストクラスがカバレッジに入るのはうざいので抜く -->
+    <condition property="src.path.name" value="real.src.path.default" >
+      <not>
+        <isset property="src.path.name" />
+      </not>
+    </condition>
+    <mkdir dir="${test.classes.dir}_tmp" />
+    <delete>
+      <fileset dir="${test.classes.dir}_tmp" includes="**/*" />
+    </delete>
+    <antcall target="do.compile">
+      <param name="compile.src.roots"     value="${src.path.name}" />
+      <param name="compile.classpath"     value="classpath.real" />
+      <param name="compile.dest.dir"      value="${test.classes.dir}_tmp" />
+      <param name="copy.resource.target"  value="copyRealResources" />
+    </antcall>
+    <condition property="jacoco.classes.name" value="jacoco.classes.default" >
+      <not>
+        <isset property="jacoco.classes.name" />
+      </not>
+    </condition>
+    <condition property="jacoco.report.name" value="${project.name}" >
+      <not>
+        <isset property="jacoco.report.name" />
+      </not>
+    </condition>
+	<jacoco:report>
+	  <!-- This task needs the collected execution data and ... -->
+	  <executiondata>
+	    <file file="${test.root.dir}/jacoco.exec" />
+	  </executiondata>
+	  <!-- the class files and optional source files ... -->
+	  <structure name="${jacoco.report.name}">
+	    <classfiles>
+	      <path refid="${jacoco.classes.name}"/>
+		</classfiles>
+		<sourcefiles encoding="${src.encoding}">
+		  <fileset dir="${src.dir}" />
+		</sourcefiles>
+	  </structure>
+
+	  <!-- to produce reports in different formats. -->
+	  <html destdir="${test.root.dir}/${ts}/${coverage.dir}" />
+	  <xml destfile="${test.root.dir}/${ts}/${coverage.dir}/xml/report.xml" />
+	</jacoco:report>
+  	<mkdir dir="${test.root.dir}/leatest" />
+    <delete>
+      <fileset dir="${test.root.dir}/leatest" includes="**/*" />
+    </delete>
+    <mkdir dir="${test.root.dir}/leatest/junit" />
+    <copy todir="${test.root.dir}/leatest/junit">
+      <fileset dir="${test.root.dir}/${ts}/${report.dir}" includes="**/*" />
+    </copy>
+    <mkdir dir="${test.root.dir}/leatest/coverage" />
+    <copy todir="${test.root.dir}/leatest/coverage">
+      <fileset dir="${test.root.dir}/${ts}/${coverage.dir}" includes="**/*" />
+    </copy>
+  </target>
+
+  <target name="copyRealResources">
+    <copy todir="${resource.dest.dir}" overwrite="true">
+      <fileset dir="${src.dir}">
+        <exclude name="**/_svn/**" />
+        <exclude name="**/.svn/**" />
+        <exclude name="**/*.java" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="copyAllResources">
+    <antcall target="copyRealResources">
+      <param name="resource.dest.dir" value="${resource.dest.dir}" />
+    </antcall>
+    <copy todir="${resource.dest.dir}" overwrite="true">
+      <fileset dir="${test.src.dir}">
+        <exclude name="**/_svn/**" />
+        <exclude name="**/.svn/**" />
+        <exclude name="**/*.java" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="initAspectJTask">
+    <taskdef classpathref="framework.path" resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties" />
+  </target>
+
+  <target name="javadoc" description="JavaDocを生成する" if="javadoc.title">
+    <delete dir="${javadoc.dir}" />
+    <mkdir dir="${javadoc.dir}" />
+    <javadoc
+          destdir="${javadoc.dir}"
+          encoding="Windows-31J"
+          docencoding="Windows-31J"
+          author="true"
+          version="true"
+          use="true"
+          windowtitle="${javadoc.title}">
+      <packageset  dir="${src.dir}" defaultexcludes="yes">
+        <include name="jp/rough_diamond/**/*"/>
+      </packageset >
+      <classpath>
+        <path refid="classpath.real"/>
+        <fileset dir="${other.lib.dir}">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+    </javadoc>
+  </target>
+
+  <target name="makeConfigBase" depends="init-task">
+    <propertyChecker base="${conf.dir}/filtering.default.properties" target="${filtering.filename}" />
+    <basename property="conf.target.name" file="${filtering.filename}" />
+    <dirname property="conf.target.dir" file="${filtering.filename}" />
+    <mkdir dir="${conf.dir}/tmp" />
+    <native2ascii src="${conf.target.dir}" dest="${conf.dir}/tmp" includes="${conf.target.name}" />
+    <pathconvert property="my.build.dir.unix" targetos="unix">
+      <path location="${my.build.dir}"/>
+    </pathconvert>
+    <filter token="base.dir"   value="${my.build.dir.unix}" />
+    <copy file="${conf.dir}/tmp/${conf.target.name}" tofile="${conf.dir}/tmp/${conf.target.name}.tmp" filtering="true" />
+    <filter filtersfile="${conf.dir}/tmp/${conf.target.name}.tmp" />
+    <antcall target="copyMiddlegenProperties" />
+    <delete dir="${conf.dir}/tmp" />
+  </target>
+
+  <target name="copyMiddlegenProperties" unless="do.not.use.makeSchemaAccessor">
+    <filter filtersfile="${conf.dir}/tmp/${conf.target.name}" />
+    <copy file="${framework.root}/conf/template/middlegen.properties" tofile="./middlegen.properties" filtering="true" overwrite="true" />
+  </target>
+
+  <target name="makeWar" depends="init-task">
+    <antcall target="makeConfig" />
+    <antcall target="makeBean" />
+    <antcall target="makeSchemaAccessor" />
+    <delete dir="${release.dir}" />
+    <mkdir dir="${release.dir}/classes" />
+    <condition property="src.path.name" value="real.src.path.default" >
+      <not>
+        <isset property="src.path.name" />
+      </not>
+    </condition>
+    <condition property="war.name" value="${ant.project.name}" >
+      <not>
+        <isset property="war.name" />
+      </not>
+    </condition>
+    <echo message="${war.name}" />
+    <antcall target="do.compile">
+      <param name="compile.src.roots"     value="${src.path.name}" />
+      <param name="compile.classpath"     value="classpath.real" />
+      <param name="compile.dest.dir"      value="${release.dir}/classes" />
+      <param name="copy.resource.target"  value="copyRealResources" />
+    </antcall>
+    <war destfile="${release.dir}/${war.name}.war" webxml="${web.root.dir}/WEB-INF/web.xml" update="true">
+      <fileset dir="${web.root.dir}">
+        <include name="**/*" />
+        <exclude name="WEB-INF/lib/**/*" />
+        <exclude name="WEB-INF/classes/**/*" />
+      </fileset>
+      <classes dir="${release.dir}/classes">
+        <include name="**/*" />
+      </classes>
+      <lib dir="${lib.dir}/">
+        <include name="*" />
+      </lib>
+    </war>
+  </target>
+</project>
