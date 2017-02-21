@@ -18,16 +18,34 @@ import org.apache.tools.ant.types.Path;
 public class GetAndMakeWSDLTask extends Task {
 	@Override
 	public void execute() throws BuildException {
-		Java java = new Java();
-		java.setProject(getProject());
-		java.setTaskName("java");
-		java.setClassname(GetAndMakeWSDL.class.getName());
-		java.setFork(true);
-		java.createArg().setFile(getWsdlStorageDir());
-		java.createArg().setValue(getDiContainerType());
-		java.createArg().setValue(getDiConfig());
-		java.setClasspath((Path)getProject().getReference(getClassPathRef()));
-		java.execute();
+		String version = System.getProperty("java.version");
+		int major = Integer.parseInt(version.split("\\.")[1]);
+		if(major >= 8) {
+			System.out.println("Java8ˆÈã‚È‚Ì‚ÅRDF2-ES‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ğ—˜—p‚µ‚Ü‚·");
+			Java java = new Java();
+			java.setProject(getProject());
+			java.setTaskName("java");
+			java.setClassname("jp.rough_diamond.framework.es.GetAndMakeWSDL4Java8");
+			java.setFork(true);
+			java.createArg().setFile(getWsdlStorageDir());
+			java.createArg().setValue(getDiContainerType());
+			java.createArg().setValue(getDiConfig());
+			Path path = (Path)getProject().getReference("classpath.GetAndMakeWSDL4Java8Libs");
+			System.out.println(path);
+			java.setClasspath(path);
+			java.execute();
+		} else {
+			Java java = new Java();
+			java.setProject(getProject());
+			java.setTaskName("java");
+			java.setClassname(GetAndMakeWSDL.class.getName());
+			java.setFork(true);
+			java.createArg().setFile(getWsdlStorageDir());
+			java.createArg().setValue(getDiContainerType());
+			java.createArg().setValue(getDiConfig());
+			java.setClasspath((Path)getProject().getReference(getClassPathRef()));
+			java.execute();
+		}
 	}
 
 	private File wsdlStorageDir;
@@ -50,7 +68,7 @@ public class GetAndMakeWSDLTask extends Task {
 	}
 
 	private String diConfig;
-	
+
 	public File getWsdlStorageDir() {
 		return wsdlStorageDir;
 	}

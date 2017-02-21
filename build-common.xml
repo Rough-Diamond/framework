@@ -12,7 +12,7 @@
   <property name="framework.java.version"           value="1.6" />
   <property name="framework.compile.debug"          value="on" />
   <property name="framework.src.encoding"           value="MS932" />
-  <property name="framework.ant.extention.version"  value="2.0.2" />
+  <property name="framework.ant.extention.version"  value="2.0.3" />
   <property name="framework.dist.dir"               value="../framework/target"/>
   <property name="framework.classes.dir"            value="${framework.dist.dir}/classes" />
 
@@ -118,6 +118,16 @@
     <path refid="framework.path" />
   </path>
 
+  <path id="classpath.GetAndMakeWSDL4Java8Libs">
+    <pathelement location="${classes.dir}" />
+    <fileset dir="${lib.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${framework.root}/GetAndMakeWSDL4Java8Libs">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
   <path id="wsdl2java.path">
     <pathelement location="${classes.dir}" />
     <fileset dir="${other.lib.dir}">
@@ -165,7 +175,7 @@
         <include name="org/dbunit/**/*" />
       </fileset>
     </copy>
-    <jar destfile="${framework.lib.root}/common/rd-ant-ext-${framework.ant.extention.version}.jar" 
+    <jar destfile="${framework.lib.root}/common/rd-ant-ext-${framework.ant.extention.version}.jar"
         basedir="${framework.work.classes.dir}">
       <manifest>
         <attribute name="Implementation-Vendor"   value="${framework.vendor}"/>
@@ -193,8 +203,8 @@
       <mapper type="flatten"/>
     </unzip>
 -->
-    <get dest="${framework.lib.root}/xdoclet/xdoclet-hibernate-module.jar" usetimestamp="true" ignoreerrors="true" src="http://dev.rough-diamond.jp/svn/framework/patches/xdoclet-hibernate-module/tags/1.2.3_p04/xdoclet-hibernate-module/xdoclet-hibernate-module-1.2.3_p04.jar" />
-    <get dest="${framework.lib.root}/xdoclet/xdoclet.jar" usetimestamp="true" ignoreerrors="true" src="http://dev.rough-diamond.jp/svn/framework/patches/xdoclet/tags/1.2.3_p01/xdoclet/xdoclet-1.2.3_p01.jar" />
+    <get dest="${framework.lib.root}/xdoclet/xdoclet-hibernate-module.jar" usetimestamp="true" ignoreerrors="true" src="https://github.com/Rough-Diamond/repos/raw/master/patches/xdoclet/xdoclet-hibernate-module-1.2.3_p04.jar" />
+    <get dest="${framework.lib.root}/xdoclet/xdoclet.jar" usetimestamp="true" ignoreerrors="true" src="https://github.com/Rough-Diamond/repos/raw/master/patches/xdoclet/xdoclet-1.2.3_p01.jar" />
     <property name="noget" value="xxx" />
   </target>
 
@@ -286,7 +296,7 @@
         <isset property="di.config.path" />
       </not>
     </condition>
-    <getWSDL wsdlStorageDir="${wsdl.dir}" classPathRef="classpath.all" 
+    <getWSDL wsdlStorageDir="${wsdl.dir}" classPathRef="classpath.all"
         diContainerType="${di.container.type}" diConfig="${di.config.path}" />
   </target>
 
@@ -323,11 +333,11 @@
     </condition>
     <wsdl2java
       wsdldir="${wsdl.dir}"
-      srcdir="${cxf.dest.dir}" 
-      rootPackage="${cxf.stub.package}" 
+      srcdir="${cxf.dest.dir}"
+      rootPackage="${cxf.stub.package}"
       muleConfigFile="${cxf.mule.client.config}"
-      serverEndpointPrefix="${server.endpoint.prefix}" 
-      classPathRef="wsdl2java.path" 
+      serverEndpointPrefix="${server.endpoint.prefix}"
+      classPathRef="wsdl2java.path"
       version="${mule.version}" />
   </target>
 
@@ -360,7 +370,7 @@
     <makeCXFService
       input="${cxf.service.file}"
       srcdir="${cxf.dest.dir}"
-      muleConfigFile="${cxf.mule.server.config}" 
+      muleConfigFile="${cxf.mule.server.config}"
       localhostEndpointPrefix="${localhost.endpoint.prefix}"
       version="${mule.version}" />
   </target>
@@ -584,7 +594,7 @@
       <hibernate version="3.0"
         overrideCacheInfoFile="${my.build.dir}/${cache.property.file}"
       />
-      <hibernatecfg 
+      <hibernatecfg
           dialect="${hibernate.dialect}"
           jdbcUrl="${hibernate.connection.url}"
           driver="${hibernate.connection.driver_class}"
@@ -630,7 +640,7 @@
         <isset property="sql.encoding" />
       </not>
     </condition>
-    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" 
+    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}"
             userid="${hibernate.connection.username}" password="${hibernate.connection.password}"
             schema="${hibernate.schema}">
       <query file="${torque.sql.dir}/preinit.sql" encoding="${sql.encoding}" />
@@ -652,7 +662,7 @@
         <isset property="sql.encoding" />
       </not>
     </condition>
-    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" 
+    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}"
             userid="${hibernate.connection.username}" password="${hibernate.connection.password}"
             schema="${hibernate.schema}">
       <query file="${sql.addalter}" encoding="${sql.encoding}" />
@@ -665,7 +675,7 @@
     <mkdir dir="${export.dir}" />
     <property file="./middlegen.properties" />
     <echo message="${sql.schema}" />
-    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" 
+    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}"
             userid="${hibernate.connection.username}" password="${hibernate.connection.password}"
             schema="${hibernate.default_schema}">
       <export4TorqueSchema dest="${export.dir}/{0}.xml" format="xml" schema="${sql.schema}" />
@@ -675,7 +685,7 @@
   <target name="DB-export-excel" depends="init-task" description="DBをExcelへエクスポートする">
     <mkdir dir="${export.dir}" />
     <property file="./middlegen.properties" />
-    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" 
+    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}"
             userid="${hibernate.connection.username}" password="${hibernate.connection.password}"
             schema="${hibernate.default_schema}">
       <export4TorqueSchema dest="${export.dir}/{0}.xls" format="excel" schema="${sql.schema}" />
@@ -685,7 +695,7 @@
   <target name="DB-recover" depends="init-task" description="エクスポートしたデータをインポートする">
     <antcall target="DB-clear-1" />
     <property file="./middlegen.properties" />
-    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" 
+    <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}"
             userid="${hibernate.connection.username}" password="${hibernate.connection.password}"
             schema="${hibernate.default_schema}">
       <operation type="INSERT" src="${export.dir}/*.xml" format="xml"/>
@@ -738,7 +748,7 @@
       <isreference refid="test.src.path" />
     </condition>
   </target>
-  
+
   <target name="test.compile" depends="test.prepare">
     <echo message="${test.src.path.name}" />
     <echo message="${lib.dir}" />
@@ -800,7 +810,7 @@
   </target>
 
   <target name="test" description="JUnit+JaCoCoでテストを実行する" depends="test.prepare, test.compile">
-    <antcall target="doJUnit" />
+  	<antcall target="doJUnit" />
   </target>
 
   <target name="doJUnit">
@@ -827,7 +837,7 @@
     </condition>
   	<jacoco:coverage destfile="${test.root.dir}/jacoco.exec"
   		includes="${jacoco.includes}" excludes="${jacoco.excludes}">
-  	  <junit printsummary="yes" haltonfailure="no" 
+  	  <junit printsummary="yes" haltonfailure="no"
           fork="yes" forkmode="once" showOutput="true" failureproperty="tests.failed" maxmemory="1024m">
         <jvmarg value="-XX:-UseSplitVerifier" />
         <classpath>
@@ -843,7 +853,7 @@
     </jacoco:coverage>
   	<antcall target="report" />
   </target>
-	
+
   <target name="report">
     <tstamp>
       <format property="ts" pattern="yyyyMMdd-HHmmss" />
@@ -854,7 +864,7 @@
     <junitreport todir="${test.root.dir}/${ts}/${report.dir}">
       <fileset dir="${result.dir}"
           includes="TEST-*.xml"/>
-      <report todir="${test.root.dir}/${ts}/${report.dir}" format="frames" /> 
+      <report todir="${test.root.dir}/${ts}/${report.dir}" format="frames" />
     </junitreport>
 	<!-- Step 3: Create coverage report -->
   	<!-- テストクラスがカバレッジに入るのはうざいので抜く -->
