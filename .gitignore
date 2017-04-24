@@ -20,3 +20,5 @@ velocity.log
 test
 target
 /bin
+libs/xdoclet/xdoclet.jar
+libs/xdoclet/xdoclet-hibernate-module.jar
