@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.Stack;
 
 import jp.rough_diamond.commons.lang.StringUtils;
+import jp.rough_diamond.commons.util.EnvReplacer;
 import jp.rough_diamond.framework.transaction.ConnectionManager;
 import jp.rough_diamond.framework.transaction.VersionUnmuchException;
 
@@ -79,6 +80,10 @@ public class HibernateConnectionManager extends ConnectionManager {
 		}
 		loadConfigration();
 		addingProperties();
+		for(Object o : config.getProperties().keySet()) {
+			String key = (String)o;
+			config.setProperty(key, EnvReplacer.replaceEnv(config.getProperty(key)));
+		}
 		if(getInterceptor() != null) {
 			config.setInterceptor(getInterceptor());
 		}
