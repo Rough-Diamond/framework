@@ -17,7 +17,7 @@ etc/sql/*.map
 work
 .*.swp
 velocity.log
-test
+/test
 target
 /bin
 libs/xdoclet/xdoclet.jar

@@ -5,7 +5,6 @@
 	<classpathentry excluding="**/.svn/*" kind="src" path="src/testingFramework"/>
 	<classpathentry excluding="**/.svn/*" kind="src" path="src/moreTest"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="libs/common/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="lib" path="libs/servletapi/jsp-api.jar"/>
 	<classpathentry kind="lib" path="libs/servletapi/servlet-api.jar"/>
 	<classpathentry kind="lib" path="libs/common/commons-beanutils-1.7.0.jar"/>
@@ -22,7 +21,6 @@
 	<classpathentry kind="lib" path="libs/ant/ant.jar"/>
 	<classpathentry kind="lib" path="libs/dbUnit/dbunit.jar"/>
 	<classpathentry kind="lib" path="libs/POI/poi-3.0.1-FINAL-20070705.jar"/>
-	<classpathentry kind="lib" path="libs/xdoclet/xjavadoc-1.5-snapshot050611.jar"/>
 	<classpathentry kind="lib" path="libs/httpclient/commons-httpclient-3.1.jar"/>
 	<classpathentry kind="lib" path="libs/common/commons-codec-1.3.jar"/>
 	<classpathentry kind="lib" path="libs/log4j/log4j-1.2.14.jar"/>
@@ -73,6 +71,7 @@
 	<classpathentry kind="lib" path="libs/mockito/mockito-core-1.10.19.jar"/>
 	<classpathentry kind="lib" path="libs/mockito/objenesis-2.4.jar"/>
 	<classpathentry kind="lib" path="libs/H2/h2-1.4.192.jar"/>
+	<classpathentry kind="lib" path="libs/common/commons-logging-1.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
